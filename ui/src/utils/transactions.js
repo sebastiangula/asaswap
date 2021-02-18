@@ -1,7 +1,6 @@
 import { Buffer } from 'buffer';
-import { APPLICATION_ID, ASSET_INDEX, COMPILED_ESCROW } from '@/config';
 import algosdk from 'algosdk';
-
+import { ALGOS_TO_ASA } from '@/utils/assetPairs';
 
 export function encodeArrayForSDK(decodedArray) {
   const encoder = new TextEncoder('ascii');
@@ -10,7 +9,7 @@ export function encodeArrayForSDK(decodedArray) {
   });
 }
 
-export function uint64ToBigEndian(x) {
+function uint64ToBigEndian(x) {
   const buff = Buffer.alloc(8);
   buff.writeUIntBE(x, 0, 8);
   return buff;
@@ -25,86 +24,164 @@ function encodeArrayForSigner(decodedArray) {
   });
 }
 
-export function makeOptInTx(accountAddress, suggestedParams) {
-  return {
-    from: accountAddress,
-    type: 'appl',
-    fee: suggestedParams['min-fee'],
-    firstRound: suggestedParams['last-round'],
-    lastRound: suggestedParams['last-round'] + 1000,
-    genesisID: suggestedParams['genesis-id'],
-    genesisHash: suggestedParams['genesis-hash'],
-    flatFee: true,
-    appIndex: APPLICATION_ID,
-    appOnComplete: 1 // OptInOC
-  };
-}
+export class TransactionMaker {
+  constructor(assetPair) {
+    this.assetPair = assetPair;
+  }
 
-export function makeCallTx(accountAddress, appArgs, suggestedParams) {
-  return {
-    from: accountAddress,
-    type: 'appl',
-    fee: suggestedParams['min-fee'],
-    firstRound: suggestedParams['last-round'],
-    lastRound: suggestedParams['last-round'] + 1000,
-    genesisID: suggestedParams['genesis-id'],
-    genesisHash: suggestedParams['genesis-hash'],
-    flatFee: true,
-    appIndex: APPLICATION_ID,
-    appArgs: encodeArrayForSigner(appArgs)
-  };
-}
+  setAssetPair(assetPair) {
+    this.assetPair = assetPair;
+  }
 
-export function makeAlgoPaymentTx(accountAddress, toAddress, amount, suggestedParams) {
-  return {
-    type: 'pay',
-    from: accountAddress,
-    to: toAddress,
-    fee: suggestedParams['min-fee'],
-    firstRound: suggestedParams['last-round'],
-    lastRound: suggestedParams['last-round'] + 1000,
-    genesisID: suggestedParams['genesis-id'],
-    genesisHash: suggestedParams['genesis-hash'],
-    flatFee: true,
-    amount: Number(amount)
-  };
-}
+  makeOptInTx(accountAddress, suggestedParams) {
+    return {
+      from: accountAddress,
+      type: 'appl',
+      fee: suggestedParams['min-fee'],
+      firstRound: suggestedParams['last-round'],
+      lastRound: suggestedParams['last-round'] + 1000,
+      genesisID: suggestedParams['genesis-id'],
+      genesisHash: suggestedParams['genesis-hash'],
+      flatFee: true,
+      appIndex: this.assetPair.applicationId,
+      appOnComplete: 1 // OptInOC
+    };
+  }
 
-export function makeAssetOptInTx(accountAddress, suggestedParams) {
-  return makeAssetPaymentTx(accountAddress, accountAddress, 0, suggestedParams);
-}
+  makeCallTx(accountAddress, appArgs, suggestedParams) {
+    return {
+      from: accountAddress,
+      type: 'appl',
+      fee: suggestedParams['min-fee'],
+      firstRound: suggestedParams['last-round'],
+      lastRound: suggestedParams['last-round'] + 1000,
+      genesisID: suggestedParams['genesis-id'],
+      genesisHash: suggestedParams['genesis-hash'],
+      flatFee: true,
+      appIndex: this.assetPair.applicationId,
+      appArgs: encodeArrayForSigner(appArgs)
+    };
+  }
 
-export function makeAssetPaymentTx(accountAddress, toAddress, amount, suggestedParams) {
-  return {
-    type: 'axfer',
-    from: accountAddress,
-    to: toAddress,
-    fee: suggestedParams['min-fee'],
-    firstRound: suggestedParams['last-round'],
-    lastRound: suggestedParams['last-round'] + 1000,
-    genesisID: suggestedParams['genesis-id'],
-    genesisHash: suggestedParams['genesis-hash'],
-    flatFee: true,
-    amount: Number(amount),
-    assetIndex: ASSET_INDEX
-  };
-}
+  makePrimaryAssetDepositTx(accountAddress, amount, suggestedParams) {
+    if (this.assetPair.type === ALGOS_TO_ASA) {
+      return this.makeAlgoPaymentTx(accountAddress, this.assetPair.escrowAddress, amount, suggestedParams);
+    } else {
+      return this.makeAssetPaymentTx(this.assetPair.primaryAsset, accountAddress, this.assetPair.escrowAddress, amount, suggestedParams);
+    }
+  }
 
-export function convertParamsToSDKFormat(suggestedParams) {
-  return {
-    consensusVersion: suggestedParams['consensus-version'],
-    fee: suggestedParams['fee'],
-    genesisHash: suggestedParams['genesis-hash'],
-    genesisID: suggestedParams['genesis-id'],
-    firstRound: suggestedParams['last-round'],
-    lastRound: suggestedParams['last-round'] + 1000,
-    flatFee: true,
-    minFee: suggestedParams['min-fee']
-  };
-}
+  makeAlgoPaymentTx(accountAddress, toAddress, amount, suggestedParams) {
+    return {
+      type: 'pay',
+      from: accountAddress,
+      to: toAddress,
+      fee: suggestedParams['min-fee'],
+      firstRound: suggestedParams['last-round'],
+      lastRound: suggestedParams['last-round'] + 1000,
+      genesisID: suggestedParams['genesis-id'],
+      genesisHash: suggestedParams['genesis-hash'],
+      flatFee: true,
+      amount: Number(amount)
+    };
+  }
 
-export function logicSign(tx) {
-  const program = new Uint8Array(Buffer.from(COMPILED_ESCROW, 'base64'));
-  const lSig = algosdk.makeLogicSig(program);
-  return algosdk.signLogicSigTransactionObject(tx, lSig);
+  makeAssetOptInTx(asset, accountAddress, suggestedParams) {
+    return this.makeAssetPaymentTx(asset, accountAddress, accountAddress, 0, suggestedParams);
+  }
+
+  makeSecondaryAssetDepositTx(accountAddress, amount, suggestedParams) {
+    return this.makeAssetPaymentTx(this.assetPair.secondaryAsset, accountAddress, this.assetPair.escrowAddress, amount, suggestedParams);
+  }
+
+  makeSecondaryAssetWithdrawalTx(accountAddress, amount, suggestedParams) {
+    return this.makeAssetWithdrawalTx(this.assetPair.secondaryAsset, accountAddress, amount, suggestedParams);
+  }
+
+  makePrimaryAssetWithdrawalTx(accountAddress, amount, suggestedParams) {
+    if (this.assetPair.type === ALGOS_TO_ASA) {
+      return this.makeAlgosWithdrawalTx(accountAddress, amount, suggestedParams);
+    } else {
+      return this.makeAssetWithdrawalTx(this.assetPair.primaryAsset, accountAddress, amount, suggestedParams);
+    }
+  }
+
+  makeAssetWithdrawalTx(asset, accountAddress, amount, suggestedParams) {
+    return algosdk.makeAssetTransferTxnWithSuggestedParams(
+      this.assetPair.escrowAddress,
+      accountAddress,
+      undefined,
+      undefined,
+      amount,
+      undefined,
+      asset.assetIndex,
+      this.convertParamsToSDKFormat(suggestedParams)
+    );
+  }
+
+  makeAlgosWithdrawalTx(accountAddress, amount, suggestedParams) {
+    return algosdk.makePaymentTxnWithSuggestedParams(
+      this.assetPair.escrowAddress,
+      accountAddress,
+      amount,
+      undefined,
+      undefined,
+      this.convertParamsToSDKFormat(suggestedParams)
+    );
+  }
+
+  makeAssetPaymentTx(asset, accountAddress, toAddress, amount, suggestedParams) {
+    return {
+      type: 'axfer',
+      from: accountAddress,
+      to: toAddress,
+      fee: suggestedParams['min-fee'],
+      firstRound: suggestedParams['last-round'],
+      lastRound: suggestedParams['last-round'] + 1000,
+      genesisID: suggestedParams['genesis-id'],
+      genesisHash: suggestedParams['genesis-hash'],
+      flatFee: true,
+      amount: Number(amount),
+      assetIndex: asset.assetIndex
+    };
+  }
+
+  convertParamsToSDKFormat(suggestedParams) {
+    return {
+      consensusVersion: suggestedParams['consensus-version'],
+      fee: suggestedParams['fee'],
+      genesisHash: suggestedParams['genesis-hash'],
+      genesisID: suggestedParams['genesis-id'],
+      firstRound: suggestedParams['last-round'],
+      lastRound: suggestedParams['last-round'] + 1000,
+      flatFee: true,
+      minFee: suggestedParams['min-fee']
+    };
+  }
+
+  combineSignedTxs(txs) {
+    const decodedTxs = txs.map((tx) => {
+      if (tx.blob instanceof Uint8Array) {
+        return tx.blob;
+      } else {
+        return new Uint8Array(atob(tx.blob).split('').map(x => x.charCodeAt(0)));
+      }
+    });
+    const totalLength = decodedTxs.reduce((previousValue, currentValue) => {
+      return previousValue + currentValue.byteLength;
+    }, 0);
+    const combinedTxs = new Uint8Array(totalLength);
+    let byteLength = 0;
+    for (let tx=0; tx < decodedTxs.length; tx++) {
+      combinedTxs.set(new Uint8Array(decodedTxs[tx]), byteLength);
+      byteLength += decodedTxs[tx].byteLength;
+    }
+    return btoa(String.fromCharCode.apply(null, combinedTxs));
+  }
+
+  logicSign(tx) {
+    const program = new Uint8Array(Buffer.from(this.assetPair.compiledEscrow, 'base64'));
+    const lSig = algosdk.makeLogicSig(program);
+    return algosdk.signLogicSigTransactionObject(tx, lSig);
+  }
 }

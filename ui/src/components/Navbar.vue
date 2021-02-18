@@ -3,7 +3,7 @@
     <nav class="bg-gray-800">
       <div class="mx-auto px-2 sm:px-6 lg:px-8">
         <div class="relative flex items-center justify-between h-16">
-          <div class="inset-y-0 left-0 flex items-center md:hidden">
+          <div class="inset-y-0 left-0 flex items-center lg:hidden">
             <!-- Mobile menu button-->
             <button
               class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
@@ -60,13 +60,13 @@
           >
             <div class="flex-shrink-0 flex items-center">
               <img
-                class="hidden md:block h-8 w-auto"
+                class="hidden lg:block h-8 w-auto"
                 src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
                 alt="Workflow"
               >
             </div>
-            <div class="hidden md:block sm:ml-6">
-              <div class="flex space-x-4">
+            <div class="hidden lg:block sm:ml-6">
+              <div class="flex space-x-2">
                 <router-link
                   v-for="entry in entries"
                   :key="entry.to"
@@ -84,6 +84,7 @@
             class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
           >
             <AlgoSignerButton />
+            <PairPicker />
           </div>
         </div>
       </div>
@@ -114,13 +115,15 @@
 import { mapGetters } from 'vuex';
 import AlgoSignerButton from './AlgoSignerButton.vue';
 import ExclamationMark from './ExclamationMark';
+import PairPicker from './PairPicker';
 
 export default {
   name: 'Navbar',
   components: {
     AlgoSignerButton,
     // eslint-disable-next-line vue/no-unused-components
-    ExclamationMark
+    ExclamationMark,
+    PairPicker
   },
   data() {
     return {
@@ -133,9 +136,9 @@ export default {
     }),
     menuClass() {
       if (this.menuIsOpened) {
-        return 'block md:hidden';
+        return 'block lg:hidden';
       } else {
-        return 'hidden md:hidden';
+        return 'hidden lg:hidden';
       }
     },
     entries() {
@@ -156,7 +159,7 @@ export default {
         {
           label: 'Withdraw',
           to: '/withdraw',
-          exclamationMark: this.userState.USR_ALGOS || this.userState.USR_ASA
+          exclamationMark: this.userState['USR_A'] || this.userState['USR_B']
         },
       ];
     }

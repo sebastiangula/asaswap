@@ -12,18 +12,18 @@
         </div>
         <div class="mt-4">
           <NumberInput
-            v-model="assetAmount"
-            :label="assetName"
-            @change="onAssetInputChange(true)"
-            @input.native="onAssetInputChange(false)"
+            v-model="primaryAmount"
+            :label="currentPair.primaryAsset.assetName"
+            @change="onAlgosInputChange(true)"
+            @input.native="onAlgosInputChange(false)"
           />
         </div>
         <div class="mt-4">
           <NumberInput
-            v-model="algosAmount"
-            label="Algos"
-            @change="onAlgosInputChange(true)"
-            @input.native="onAlgosInputChange(false)"
+            v-model="secondaryAmount"
+            :label="currentPair.secondaryAsset.assetName"
+            @change="onAssetInputChange(true)"
+            @input.native="onAssetInputChange(false)"
           />
         </div>
         <div class="py-4">
@@ -44,13 +44,13 @@
             <div class="flex flex-row">
               <div>Exchange rate:</div>
               <div class="text-right flex-grow font-bold">
-                {{ algosPerAsset }}
+                {{ primaryPerSecondary }}
               </div>
             </div>
             <div class="flex flex-row">
               <div />
               <div class="text-right flex-grow font-bold">
-                {{ assetPerAlgos }}
+                {{ secondaryPerPrimary }}
               </div>
             </div>
             <div class="flex flex-row">
@@ -80,21 +80,8 @@
 <script>
 import { mapGetters } from 'vuex';
 import NumberInput from '../NumberInput';
-import {
-  getAlgos,
-  getMicroAlgos,
-  getAssetDisplayAmount,
-  getRawAssetAmount,
-} from '@/utils/conversion';
 import { getInputError } from '@/utils/validation';
 import ActionButton from '../ActionButton';
-import {
-  ALGOS_DECIMAL_POINTS,
-  ASSET_DECIMAL_POINTS,
-  RATIO,
-  ASSET_NAME,
-} from '@/config';
-import { ExchangeCalculator } from '@/utils/exchange';
 import Card from '@/components/cards/Card';
 
 export default {
@@ -106,66 +93,62 @@ export default {
   },
   data() {
     return {
-      assetAmount: null,
-      algosAmount: null,
-      errors: {},
+      primaryAmount: null,
+      secondaryAmount: null,
       error: null,
-      hasErrors: false,
     };
   },
   computed: {
     ...mapGetters({
-      algorand: 'algorand/algorand',
+      rawStore: 'algorand/rawStore',
       globalState: 'algorand/globalState',
+      exchangeCalculator: 'algorand/exchangeCalculator',
+      currentPair: 'algorand/currentPair'
     }),
+    primaryAsset() {
+      return this.currentPair.primaryAsset;
+    },
+    secondaryAsset() {
+      return this.currentPair.secondaryAsset;
+    },
     exchangeRate() {
       return Math.trunc(
-        (getMicroAlgos(this.algosAmount) * RATIO) /
-          getRawAssetAmount(this.assetAmount)
+        (this.primaryAsset.getRawAssetAmount(this.primaryAmount) * this.currentPair.ratio) /
+          this.secondaryAsset.getRawAssetAmount(this.secondaryAmount)
       );
     },
     globalExchangeRate() {
-      const mappedGlobalState = this.globalState;
-      let calculator = new ExchangeCalculator(
-        mappedGlobalState['ALGOS_BAL'],
-        mappedGlobalState['ASA_BAL']
-      );
-      return calculator.getGlobalExchangeRate();
+      return this.exchangeCalculator.getGlobalExchangeRate();
     },
     reverseGlobalExchangeRate() {
-      const mappedGlobalState = this.globalState;
-      let calculator = new ExchangeCalculator(
-        mappedGlobalState['ALGOS_BAL'],
-        mappedGlobalState['ASA_BAL']
-      );
-      return calculator.getReverseGlobalExchangeRate();
+      return this.exchangeCalculator.getReverseGlobalExchangeRate();
     },
-    algosPerAsset() {
+    primaryPerSecondary() {
       if (!this.globalExchangeRate || !isFinite(this.globalExchangeRate)) {
         return 'N/A';
       }
-      const value = getAlgos(
-        getRawAssetAmount(this.globalExchangeRate) / RATIO,
-        true
+      const value = this.primaryAsset.getAssetDisplayAmount(
+        this.secondaryAsset.getRawAssetAmount(this.globalExchangeRate) / this.currentPair.ratio,
+        this.currentPair.ratioDecimalPoints
       );
-      return `${value} ALGOS PER ${ASSET_NAME.toUpperCase()}`;
+      return `${value} ${this.primaryAsset.assetName.toUpperCase()} PER ${this.secondaryAsset.assetName.toUpperCase()}`;
     },
-    assetPerAlgos() {
+    secondaryPerPrimary() {
       if (!this.globalExchangeRate || !isFinite(this.globalExchangeRate)) {
         return 'N/A';
       }
-      const value = getAssetDisplayAmount(
-        getMicroAlgos(this.reverseGlobalExchangeRate) / RATIO,
-        true
+      const value = this.secondaryAsset.getAssetDisplayAmount(
+        this.primaryAsset.getRawAssetAmount(this.reverseGlobalExchangeRate) / this.currentPair.ratio,
+        this.currentPair.ratioDecimalPoints
       );
-      return `${value} ${ASSET_NAME.toUpperCase()} PER ALGOS`;
+      return `${value} ${this.secondaryAsset.assetName.toUpperCase()} PER ${this.primaryAsset.assetName.toUpperCase()}`;
     },
     difference() {
       const difference =
         Math.trunc(
-          (Math.abs(this.exchangeRate - this.globalExchangeRate) * RATIO) /
+          (Math.abs(this.exchangeRate - this.globalExchangeRate) * this.currentPair.ratio) /
             this.globalExchangeRate
-        ) / RATIO;
+        ) / this.currentPair.ratio;
       return difference;
     },
     isDifferenceCorrect() {
@@ -178,12 +161,12 @@ export default {
       if (!this.globalState) {
         return;
       }
-      if (this.globalState.LIQ_TOKENS === 0) {
-        return getMicroAlgos(this.algosAmount);
+      if (this.globalState['LIQ'] === 0) {
+        return this.primaryAsset.getRawAssetAmount(this.primaryAmount);
       }
       return Math.trunc(
-        (getMicroAlgos(this.algosAmount) * this.globalState.LIQ_TOKENS) /
-          this.globalState.ALGOS_BAL
+        (this.primaryAsset.getRawAssetAmount(this.primaryAmount) * this.globalState['LIQ']) /
+          this.globalState['A']
       );
     },
     liquidityTokensDisplay() {
@@ -192,58 +175,70 @@ export default {
       }
       return this.liquidityTokens;
     },
-    assetName() {
-      return ASSET_NAME;
-    },
     poolShareDisplay() {
-      if (this.liquidityTokens && this.globalState.LIQ_TOKENS === 0) {
+      if (this.liquidityTokens && this.globalState['LIQ'] === 0) {
         return '100%';
-      } else if (!this.globalState.LIQ_TOKENS) {
+      } else if (!this.globalState['LIQ']) {
         return '0%';
       }
-      const value = (this.liquidityTokens * 100 / (this.globalState.LIQ_TOKENS + this.liquidityTokens)).toFixed(2);
+      const value = (this.liquidityTokens * 100 / (this.globalState['LIQ'] + this.liquidityTokens)).toFixed(2);
       if (value >= 100) {
         return '99.99%';
       }
       return value + '%';
     }
   },
+  watch: {
+    currentPair() {
+      this.primaryAmount = null;
+      this.secondaryAmount = null;
+      this.validate();
+    }
+  },
   methods: {
     onAlgosInputChange(recalculate) {
-      if (this.algosAmount === null || this.algosAmount === '') {
-        this.assetAmount = null;
+      if (this.globalState['LIQ'] === 0) {
+        this.validate();
         return;
       }
-      this.assetAmount = getAssetDisplayAmount(
+      if (this.primaryAmount === null || this.primaryAmount === '') {
+        this.secondaryAmount = null;
+        return;
+      }
+      this.secondaryAmount = this.secondaryAsset.getAssetDisplayAmount(
         Math.trunc(
-          (getMicroAlgos(this.algosAmount) / this.globalExchangeRate) * RATIO
+          (this.primaryAsset.getRawAssetAmount(this.primaryAmount) / this.globalExchangeRate) * this.currentPair.ratio
         )
       );
       if (!this.isDifferenceCorrect && recalculate) {
-        this.algosAmount = getAlgos(
+        this.primaryAmount = this.primaryAsset.getAssetDisplayAmount(
           Math.trunc(
-            (this.globalExchangeRate * getRawAssetAmount(this.assetAmount)) /
-              RATIO
+            (this.globalExchangeRate * this.secondaryAsset.getRawAssetAmount(this.secondaryAmount)) /
+              this.currentPair.ratio
           )
         );
       }
       this.validate();
     },
     onAssetInputChange(recalculate) {
-      if (this.assetAmount === null || this.assetAmount === '') {
-        this.algosAmount = null;
+      if (this.globalState['LIQ'] === 0) {
+        this.validate();
         return;
       }
-      this.algosAmount = getAlgos(
+      if (this.secondaryAmount === null || this.secondaryAmount === '') {
+        this.primaryAmount = null;
+        return;
+      }
+      this.primaryAmount = this.primaryAsset.getAssetDisplayAmount(
         Math.trunc(
-          (this.globalExchangeRate * getRawAssetAmount(this.assetAmount)) /
-            RATIO
+          (this.globalExchangeRate * this.secondaryAsset.getRawAssetAmount(this.assetAmount)) /
+            this.currentPair.ratio
         )
       );
       if (!this.isDifferenceCorrect && recalculate) {
-        this.assetAmount = getAssetDisplayAmount(
+        this.assetAmount = this.secondaryAsset.getAssetDisplayAmount(
           Math.trunc(
-            (getMicroAlgos(this.algosAmount) / this.globalExchangeRate) * RATIO
+            (this.primaryAsset.getRawAssetAmount(this.primaryAmount) / this.globalExchangeRate) * this.currentPair.ratio
           )
         );
       }
@@ -251,14 +246,14 @@ export default {
     },
     validate() {
       let error = null;
-      error = getInputError(this.assetAmount, ASSET_DECIMAL_POINTS, ASSET_NAME);
+      error = getInputError(this.secondaryAmount, this.secondaryAsset.decimalPoints, this.secondaryAsset.assetName);
       error =
         error ||
-        getInputError(this.algosAmount, ALGOS_DECIMAL_POINTS, 'Algorand');
+        getInputError(this.primaryAmount, this.primaryAsset.decimalPoints, this.primaryAsset.assetName);
       if (
         !error &&
         !this.isDifferenceCorrect &&
-        this.globalState.LIQ_TOKENS > 0
+        this.globalState['LIQ'] > 0
       ) {
         error = 'Invalid exchange rate';
       }
@@ -267,16 +262,12 @@ export default {
       return !error;
     },
     async onAddLiquidity() {
-      const accountAddress = this.algorand.account;
+      const accountAddress = this.rawStore.account;
       await this.waitForAction(() =>
-        this.algorand.serviceInstance.addLiquidity(
-          accountAddress,
-          getRawAssetAmount(this.assetAmount),
-          getMicroAlgos(this.algosAmount)
-        )
+        this.rawStore.serviceInstance.addLiquidity(accountAddress, this.primaryAsset.getRawAssetAmount(this.primaryAmount), this.secondaryAsset.getRawAssetAmount(this.secondaryAmount))
       );
-      this.algosAmount = null;
-      this.assetAmount = null;
+      this.primaryAmount = null;
+      this.secondaryAmount = null;
     },
   },
 };

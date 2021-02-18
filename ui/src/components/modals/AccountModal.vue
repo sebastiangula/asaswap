@@ -25,7 +25,6 @@
           <div class="sm:flex sm:items-start">
             <div class="w-full">
               <h3
-                id="modal-headline"
                 class="text-lg leading-6 font-medium text-gray-900"
               >
                 Account
@@ -37,19 +36,18 @@
                 </div>
               </div>
               <div class="mt-2 flex flex flex-row w-full flex-wrap">
-                <div>Algos Balance:</div>
+                <div>{{ primaryAsset.assetName }} Balance:</div>
                 <div class="text-right font-bold flex-grow break-all truncate">
-                  {{ algosBalance }}
+                  {{ primaryAssetBalance }}
                 </div>
               </div>
               <div class="mt-2 flex flex flex-row w-full flex-wrap">
-                <div>{{ assetName }} Balance:</div>
+                <div>{{ secondaryAsset.assetName }} Balance:</div>
                 <div class="text-right font-bold flex-grow break-all truncate">
-                  {{ assetBalance }}
+                  {{ secondaryAssetBalance }}
                 </div>
               </div>
               <h3
-                id="modal-headline"
                 class="text-lg leading-6 font-medium text-gray-900 mt-4"
               >
                 Global Balances
@@ -57,19 +55,19 @@
               <div class="mt-4 flex flex flex-row w-full flex-wrap">
                 <div>Liquidity Tokens:</div>
                 <div class="text-right font-bold flex-grow break-all truncate">
-                  {{ globalState.LIQ_TOKENS }}
+                  {{ globalState.LIQ }}
                 </div>
               </div>
               <div class="mt-2 flex flex flex-row w-full flex-wrap">
-                <div>Algos Balance:</div>
+                <div>{{ primaryAsset.assetName }} Balance:</div>
                 <div class="text-right font-bold flex-grow break-all truncate">
-                  {{ globalAlgosBalance }}
+                  {{ globalPrimaryAssetBalance }}
                 </div>
               </div>
               <div class="mt-2 flex flex flex-row w-full flex-wrap">
-                <div>{{ assetName }} Balance:</div>
+                <div>{{ secondaryAsset.assetName }} Balance:</div>
                 <div class="text-right font-bold flex-grow break-all truncate">
-                  {{ globalAssetBalance }}
+                  {{ globalSecondaryAssetBalance }}
                 </div>
               </div>
             </div>
@@ -92,66 +90,51 @@
 </template>
 <script>
 import eventBus from '@/utils/eventBus';
-import { getAlgos, getAssetDisplayAmount } from '@/utils/conversion';
-import { ASSET_NAME } from '@/config';
 import { mapGetters } from 'vuex';
 
 export default {
   name: 'SelectAccountModal',
-  data() {
-    return {
-      selectedAccount: null,
-      assetName: ASSET_NAME,
-    };
-  },
   computed: {
     ...mapGetters({
-      algorand: 'algorand/algorand',
       userState: 'algorand/userState',
-      globalState: 'algorand/globalState'
+      globalState: 'algorand/globalState',
+      currentPair: 'algorand/currentPair'
     }),
-    globalAlgosBalance() {
-      return getAlgos(this.globalState.ALGOS_BAL);
+    primaryAsset() {
+      return this.currentPair.primaryAsset;
     },
-    globalAssetBalance() {
-      return getAssetDisplayAmount(this.globalState.ASA_BAL);
+    secondaryAsset() {
+      return this.currentPair.secondaryAsset;
     },
-    algosBalance() {
-      if (isNaN(this.userState.USR_ALGOS)) {
+    globalPrimaryAssetBalance() {
+      return this.primaryAsset.getAssetDisplayAmount(this.globalState['A']);
+    },
+    globalSecondaryAssetBalance() {
+      return this.secondaryAsset.getAssetDisplayAmount(this.globalState['B']);
+    },
+    primaryAssetBalance() {
+      if (isNaN(this.userState['USR_A'])) {
         return 'N/A';
       }
-      return getAlgos(this.userState.USR_ALGOS);
+      return this.primaryAsset.getAssetDisplayAmount(this.userState['USR_A']);
     },
-    assetBalance() {
-      if (isNaN(this.userState.USR_ASA)) {
+    secondaryAssetBalance() {
+      if (isNaN(this.userState['USR_B'])) {
         return 'N/A';
       }
-      return getAssetDisplayAmount(this.userState.USR_ASA);
+      return this.secondaryAsset.getAssetDisplayAmount(this.userState['USR_B']);
     },
     liquidityTokens() {
-      if (isNaN(this.userState.USR_LIQ)) {
+      if (isNaN(this.userState['USR_LIQ'])) {
         return 'N/A';
       }
-      return this.userState.USR_LIQ;
+      return this.userState['USR_LIQ'];
     },
-  },
-  mounted() {
-    if (this.accounts) {
-      this.selectedAccount = this.accounts[0];
-    }
   },
   methods: {
     onClose() {
       eventBus.$emit('close-modals');
-    },
-    onSelect() {
-      if (this.selectedAccount) {
-        this.$store.dispatch('algorand/SELECT_ACCOUNT', {
-          accountAddress: this.selectedAccount,
-        });
-      }
-      eventBus.$emit('close-modals');
-    },
+    }
   },
 };
 </script>

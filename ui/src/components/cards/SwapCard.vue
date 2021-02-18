@@ -16,17 +16,17 @@
               <div class="flex flex-col flex-grow mr-4">
                 <NumberInput
                   v-model="firstAmount"
-                  :disabled="!algorand.applicationData"
+                  :disabled="!rawStore.applicationData"
                   @change="onFirstInputChange"
                   @input.native="onFirstInputChange"
                 />
               </div>
               <div class="flex flex-col">
                 <t-select
-                  v-model="firstCurrency"
+                  :value="firstAsset.assetName.toUpperCase()"
                   class="h-full"
-                  :options="currencies"
-                  :disabled="!algorand.applicationData"
+                  :options="firstCurrencyOptions"
+                  @input="onFirstCurrencyChange"
                 />
               </div>
             </div>
@@ -52,17 +52,17 @@
               <div class="flex flex-col flex-grow mr-4">
                 <NumberInput
                   v-model="secondAmount"
-                  :disabled="!algorand.applicationData"
+                  :disabled="!rawStore.applicationData"
                   @change="onSecondInputChange(true)"
                   @input.native="onSecondInputChange(false)"
                 />
               </div>
               <div class="flex flex-col">
                 <t-select
-                  v-model="secondCurrency"
+                  :value="secondAsset.assetName.toUpperCase()"
                   class="h-full"
-                  :options="currencies"
-                  :disabled="!algorand.applicationData"
+                  :options="secondCurrencyOptions"
+                  @input="onSecondCurrencyChange"
                 />
               </div>
             </div>
@@ -78,7 +78,7 @@
         </div>
       </div>
       <div
-        v-if="globalState !== {}"
+        v-if="Object.keys(globalState).length !== 0"
         class="bg-gray-100 rounded-lg"
       >
         <div class="py-4 px-4">
@@ -115,240 +115,217 @@
 </template>
 <script>
 import { mapGetters } from 'vuex';
-import {
-  getAlgos,
-  getMicroAlgos,
-  getAssetDisplayAmount,
-  getRawAssetAmount,
-
-} from '@/utils/conversion';
 import { getInputError } from '@/utils/validation';
-import NumberInput from '../NumberInput.vue';
 import ActionButton from '../ActionButton';
-import {
-  ALGOS_DECIMAL_POINTS,
-  ASSET_DECIMAL_POINTS,
-  ASSET_NAME,
-  RATIO,
-} from '@/config';
-import { ExchangeCalculator } from '@/utils/exchange';
+import { ASSET_PAIRS, ASSETS } from '@/utils/assetPairs';
 import Card from '@/components/cards/Card';
+import NumberInput from '@/components/NumberInput';
 
 export default {
   name: 'SwapCard',
   components: {
     NumberInput,
     ActionButton,
-    Card
+    Card,
   },
   data() {
     return {
-      firstCurrency: 'ALGOS',
-      secondCurrency: ASSET_NAME.toUpperCase(),
       firstAmount: null,
       secondAmount: null,
-      currencies: ['ALGOS', ASSET_NAME.toUpperCase()],
       feePercentage: 3,
       error: null,
     };
   },
   computed: {
     ...mapGetters({
-      algorand: 'algorand/algorand',
+      rawStore: 'algorand/rawStore',
       globalState: 'algorand/globalState',
+      exchangeCalculator: 'algorand/exchangeCalculator',
+      currentPair: 'algorand/currentPair',
     }),
+    primaryAsset() {
+      return this.currentPair.primaryAsset;
+    },
+    secondaryAsset() {
+      return this.currentPair.secondaryAsset;
+    },
+    firstAsset() {
+      return this.currentPair.reversedKey ? this.secondaryAsset : this.primaryAsset;
+    },
+    secondAsset() {
+      return this.currentPair.reversedKey ? this.primaryAsset : this.secondaryAsset;
+    },
+    firstCurrencyOptions() {
+      return Object.keys(ASSETS).map((key) => {
+        return key.toUpperCase();
+      });
+    },
+    secondCurrencyOptions() {
+      let pairs = Object.keys(ASSET_PAIRS).map((pair) => pair.split('/'));
+      pairs = pairs.filter((pair) => {
+        return pair[0] === this.firstAsset.assetName.toUpperCase();
+      });
+      pairs.push([null, this.firstAsset.assetName.toUpperCase()]);
+      return pairs.map((pair) => pair[1]);
+    },
     globalExchangeRate() {
-      const mappedGlobalState = this.globalState;
-      let calculator = new ExchangeCalculator(
-        mappedGlobalState['ALGOS_BAL'],
-        mappedGlobalState['ASA_BAL']
-      );
-      return calculator.getGlobalExchangeRate();
+      return this.exchangeCalculator.getGlobalExchangeRate();
     },
     exchangeRate() {
-      const mappedGlobalState = this.globalState;
-      const calculator = new ExchangeCalculator(
-        mappedGlobalState['ALGOS_BAL'],
-        mappedGlobalState['ASA_BAL']
-      );
-      if (this.firstCurrency == 'ALGOS') {
-        return calculator.getSwapExchangeRate(
-          getMicroAlgos(this.firstAmount),
-          0
-        );
+      if (this.currentPair.reversedKey) {
+        return this.exchangeCalculator.getSwapExchangeRate(0, this.secondaryAsset.getRawAssetAmount(this.firstAmount));
       } else {
-        return calculator.getSwapExchangeRate(
-          0,
-          getRawAssetAmount(this.firstAmount)
-        );
+        return this.exchangeCalculator.getSwapExchangeRate(this.primaryAsset.getRawAssetAmount(this.firstAmount), 0);
       }
     },
     reverseExchangeRate() {
-      const mappedGlobalState = this.globalState;
-      const calculator = new ExchangeCalculator(
-        mappedGlobalState['ALGOS_BAL'],
-        mappedGlobalState['ASA_BAL']
-      );
-      if (this.firstCurrency == 'ALGOS') {
-        return calculator.getReverseSwapExchangeRate(
-          getMicroAlgos(this.firstAmount),
-          0
-        );
+      if (this.currentPair.reversedKey) {
+        return this.exchangeCalculator.getReverseSwapExchangeRate(0, this.secondaryAsset.getRawAssetAmount(this.firstAmount));
       } else {
-        return calculator.getReverseSwapExchangeRate(
-          0,
-          getRawAssetAmount(this.firstAmount)
-        );
+        return this.exchangeCalculator.getReverseSwapExchangeRate(this.primaryAsset.getRawAssetAmount(this.firstAmount), 0);
       }
     },
     exchangeRateDisplay() {
       if (!this.exchangeRate || !isFinite(this.exchangeRate)) {
         return 'N/A';
       }
-      const value = getAlgos(
-        getRawAssetAmount(this.exchangeRate) / RATIO, true
+      const value = this.primaryAsset.getAssetDisplayAmount(
+        this.secondaryAsset.getRawAssetAmount(this.exchangeRate) / this.currentPair.ratio, this.currentPair.ratioDecimalPoints
       );
-      return `${value} ALGOS PER ${ASSET_NAME.toUpperCase()}`;
+      return `${value} ${this.primaryAsset.assetName.toUpperCase()} PER ${this.secondaryAsset.assetName.toUpperCase()}`;
     },
     reverseExchangeRateDisplay() {
       if (!this.reverseExchangeRate || !isFinite(this.reverseExchangeRate)) {
         return 'N/A';
       }
-      const value = getAssetDisplayAmount(
-        getMicroAlgos(this.reverseExchangeRate) / RATIO, true
+      const value = this.secondaryAsset.getAssetDisplayAmount(
+        this.primaryAsset.getRawAssetAmount(this.reverseExchangeRate) / this.currentPair.ratio, this.currentPair.ratioDecimalPoints
       );
-      return `${value} ${ASSET_NAME.toUpperCase()} PER ALGOS`;
+      return `${value} ${this.secondaryAsset.assetName.toUpperCase()} PER ${this.primaryAsset.assetName.toUpperCase()}`;
     },
     priceImpact() {
       const difference =
         Math.trunc(
           (Math.abs(this.exchangeRate - this.globalExchangeRate) *
-            RATIO) /
-            this.globalExchangeRate
-        ) / RATIO;
+            this.currentPair.ratio) /
+          this.globalExchangeRate
+        ) / this.currentPair.ratio;
       return difference;
     },
     priceImpactDisplay() {
-      if (!this.priceImpact || !this.firstAmount || !this.secondAmount) {
+      if (!isFinite(this.priceImpact) || !this.firstAmount || !this.secondAmount) {
         return 'N/A';
       }
       return (this.priceImpact * 100).toFixed(2) + ' %';
     },
     fee() {
-      const mappedGlobalState = this.globalState;
-      const calculator = new ExchangeCalculator(
-        mappedGlobalState['ALGOS_BAL'],
-        mappedGlobalState['ASA_BAL']
-      );
-      if (this.firstCurrency == 'ALGOS') {
-        return calculator.getAlgosToAssetFee(getMicroAlgos(this.firstAmount));
-      } else {
-        return calculator.getAssetToAlgosFee(
-          getRawAssetAmount(this.firstAmount)
+      if (this.currentPair.reversedKey) {
+        return this.exchangeCalculator.getSecondaryToPrimaryFee(
+          this.secondaryAsset.getRawAssetAmount(this.firstAmount)
         );
+      } else {
+        return this.exchangeCalculator.getPrimaryToSecondaryFee(this.primaryAsset.getRawAssetAmount(this.firstAmount));
       }
     },
     feeDisplay() {
       if (!this.fee) {
         return 'N/A';
       }
-      let value;
-      if (this.firstCurrency == 'ALGOS') {
-        value = getAssetDisplayAmount(this.fee, true);
-      } else {
-        value = getAlgos(this.fee, true);
-      }
-      return `${value} ${this.secondCurrency.toUpperCase()}`;
+      const value = this.secondAsset.getAssetDisplayAmount(this.fee, this.currentPair.ratioDecimalPoints);
+      return `${value} ${this.secondAsset.assetName.toUpperCase()}`;
     },
   },
+
   watch: {
-    firstCurrency(value) {
-      if (value === this.secondCurrency) {
-        const currencies = [...this.currencies];
-        const indexOfCurrency = currencies.indexOf(value);
-        const otherCurrencies = currencies.splice(indexOfCurrency - 1, 1);
-        this.secondCurrency = otherCurrencies[0];
-      }
+    currentPair() {
       this.firstAmount = null;
       this.secondAmount = null;
       this.onFirstInputChange();
-    },
-    secondCurrency(value) {
-      if (value === this.firstCurrency) {
-        const currencies = [...this.currencies];
-        const indexOfCurrency = currencies.indexOf(value);
-        const otherCurrencies = currencies.splice(indexOfCurrency - 1, 1);
-        this.firstCurrency = otherCurrencies[0];
-      }
-      this.firstAmount = null;
-      this.secondAmount = null;
-      this.onFirstInputChange();
-    },
+    }
   },
   methods: {
-    getExchangeRate(assetAmount, algosAmount) {
-      if (!this.globalState) {
-        return null;
+    onFirstCurrencyChange(value) {
+      const splittedKey = this.currentPair.key.split('/');
+      const potentialPair = `${value}/${this.secondAsset.assetName.toUpperCase()}`;
+      if (ASSET_PAIRS[potentialPair]) {
+        this.$store.dispatch('algorand/SET_CURRENT_PAIR', { pairKey: potentialPair });
+      } else if (value === splittedKey[1]) {
+        const reversedKey = [splittedKey[1], splittedKey[0]].join('/');
+        this.$store.dispatch('algorand/SET_CURRENT_PAIR', { pairKey: reversedKey });
+      } else {
+        let pairs = Object.keys(ASSET_PAIRS).map((pair) => pair.split('/'));
+        pairs = pairs.filter((pair) => {
+          return pair[0] === value;
+        });
+        pairs = pairs.map((pair) => pair[1]);
+        const newKey = [value, pairs[0]].join('/');
+        this.$store.dispatch('algorand/SET_CURRENT_PAIR', { pairKey: newKey });
       }
-      const mappedGlobalState = this.globalState;
-      if (!mappedGlobalState) {
-        return null;
+      this.firstAmount = null;
+      this.secondAmount = null;
+      this.onFirstInputChange();
+    },
+    onSecondCurrencyChange(value) {
+      const potentialPair = `${this.firstAsset.assetName.toUpperCase()}/${value}`;
+      const splittedKey = this.currentPair.key.split('/');
+      if (ASSET_PAIRS[potentialPair]) {
+        this.$store.dispatch('algorand/SET_CURRENT_PAIR', { pairKey: potentialPair });
+      } else if (value === splittedKey[0]) {
+        const reversedKey = [splittedKey[1], splittedKey[0]].join('/');
+        this.$store.dispatch('algorand/SET_CURRENT_PAIR', { pairKey: reversedKey });
+      } else {
+        let pairs = Object.keys(ASSET_PAIRS).map((pair) => pair.split('/'));
+        pairs = pairs.filter((pair) => {
+          return pair[1] === value;
+        });
+        pairs = pairs.map((pair) => pair[0]);
+        const newKey = [pairs[0], value].join('/');
+        this.$store.dispatch('algorand/SET_CURRENT_PAIR', { pairKey: newKey });
       }
-      const tokensBalance = mappedGlobalState['ASA_BAL'] + Number(assetAmount);
-      const algosBalance =
-        mappedGlobalState['ALGOS_BAL'] + getMicroAlgos(algosAmount);
-      return Math.trunc(
-        (algosBalance * this.ratioDecimalPoints) / tokensBalance
-      );
+      this.firstAmount = null;
+      this.secondAmount = null;
+      this.onFirstInputChange();
     },
     onFirstInputChange() {
       this.validate();
       if (!this.globalState) {
-        return null;
+        return;
       } else if (this.firstAmount === null || this.firstAmount === '') {
         this.secondAmount = null;
         return;
       }
-      let calculator = new ExchangeCalculator(
-        this.globalState['ALGOS_BAL'],
-        this.globalState['ASA_BAL']
-      );
-      if (this.firstCurrency === ASSET_NAME.toUpperCase()) {
-        const rawAsset = getRawAssetAmount(this.firstAmount);
-        const rawAlgos = calculator.assetToAlgos(rawAsset);
-        this.secondAmount = getAlgos(rawAlgos);
-      } else if (this.firstCurrency === 'ALGOS') {
-        const rawAlgos = getMicroAlgos(this.firstAmount);
-        const rawAsset = calculator.algosToAsset(rawAlgos);
-        this.secondAmount = getAssetDisplayAmount(rawAsset);
+      if (this.currentPair.reversedKey) {
+        const rawSecondary = this.secondaryAsset.getRawAssetAmount(this.firstAmount);
+        const rawPrimary = this.exchangeCalculator.secondaryToPrimary(rawSecondary);
+        this.secondAmount = this.primaryAsset.getAssetDisplayAmount(rawPrimary);
+      } else {
+        const rawPrimary = this.primaryAsset.getRawAssetAmount(this.firstAmount);
+        const rawSecondary = this.exchangeCalculator.primaryToSecondary(rawPrimary);
+        this.secondAmount = this.secondaryAsset.getAssetDisplayAmount(rawSecondary);
       }
     },
     onSecondInputChange(recalculate) {
       this.validate();
       if (!this.globalState) {
-        return null;
+        return;
       } else if (this.secondAmount === null || this.secondAmount === '') {
         this.firstAmount = null;
         return;
       }
-      let calculator = new ExchangeCalculator(
-        this.globalState['ALGOS_BAL'],
-        this.globalState['ASA_BAL']
-      );
-      if (this.firstCurrency === ASSET_NAME.toUpperCase()) {
-        const rawAlgos = getMicroAlgos(this.secondAmount);
-        const rawAsset = calculator.reverseAssetToAlgos(rawAlgos);
-        this.firstAmount = getAssetDisplayAmount(rawAsset);
-        const secondAmount = getAlgos(calculator.assetToAlgos(rawAsset));
+      if (this.currentPair.reversedKey) {
+        const rawPrimary = this.primaryAsset.getRawAssetAmount(this.secondAmount);
+        const rawSecondary = this.exchangeCalculator.reverseSecondaryToPrimary(rawPrimary);
+        this.firstAmount = this.secondaryAsset.getAssetDisplayAmount(rawSecondary);
+        const secondAmount = this.primaryAsset.getAssetDisplayAmount(this.exchangeCalculator.secondaryToPrimary(rawPrimary));
         if (recalculate || secondAmount < this.secondAmount) {
           this.secondAmount = secondAmount;
         }
-      } else if (this.firstCurrency === 'ALGOS') {
-        const rawAsset = getRawAssetAmount(this.secondAmount);
-        const rawAlgos = calculator.reverseAlgosToAsset(rawAsset);
-        this.firstAmount = getAlgos(rawAlgos);
-        const secondAmount = getAssetDisplayAmount(
-          calculator.algosToAsset(rawAlgos)
+      } else {
+        const rawSecondary = this.secondaryAsset.getRawAssetAmount(this.secondAmount);
+        const rawPrimary = this.exchangeCalculator.reversePrimaryToSecondary(rawSecondary);
+        this.firstAmount = this.primaryAsset.getAssetDisplayAmount(rawPrimary);
+        const secondAmount = this.secondaryAsset.getAssetDisplayAmount(
+          this.exchangeCalculator.primaryToSecondary(rawPrimary)
         );
         if (recalculate || secondAmount < this.secondAmount) {
           this.secondAmount = secondAmount;
@@ -357,43 +334,33 @@ export default {
     },
     validate() {
       let error = null;
-      if (this.firstCurrency === 'ALGOS') {
-        error = getInputError(
-          this.firstAmount,
-          ALGOS_DECIMAL_POINTS,
-          'Algorand'
-        );
-        error =
-          error ||
-          getInputError(this.secondAmount, ASSET_DECIMAL_POINTS, ASSET_NAME);
-      } else {
-        error = getInputError(
-          this.firstAmount,
-          ASSET_DECIMAL_POINTS,
-          ASSET_NAME
-        );
-        error =
-          error ||
-          getInputError(this.secondAmount, ALGOS_DECIMAL_POINTS, 'Algorand');
-      }
+      error = getInputError(
+        this.firstAmount,
+        this.firstAsset.decimalPoints,
+        this.firstAsset.assetName
+      );
+      error =
+        error ||
+        getInputError(this.secondAmount, this.secondAsset.decimalPoints, this.secondAsset.assetName);
+
       this.error = error;
       this.$forceUpdate();
       return !error;
     },
     async onSwap() {
-      const accountAddress = this.algorand.account;
-      if (this.firstCurrency === ASSET_NAME.toUpperCase()) {
+      const accountAddress = this.rawStore.account;
+      if (this.currentPair.reversed) {
         await this.waitForAction(() =>
-          this.algorand.serviceInstance.swapAsset(
+          this.rawStore.serviceInstance.swapSecondary(
             accountAddress,
-            getRawAssetAmount(this.firstAmount)
+            this.secondaryAsset.getRawAssetAmount(this.firstAmount)
           )
         );
-      } else if (this.firstCurrency === 'ALGOS') {
+      } else {
         await this.waitForAction(() =>
-          this.algorand.serviceInstance.swapAlgos(
+          this.rawStore.serviceInstance.swapPrimary(
             accountAddress,
-            getMicroAlgos(this.firstAmount)
+            this.primaryAsset.getRawAssetAmount(this.firstAmount)
           )
         );
       }

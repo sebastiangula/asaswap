@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!algorand.serviceInstance">
+    <div v-if="!rawStore.serviceInstance">
       <t-button
         disabled
         classes="block tracking-widest w-full uppercase text-center shadow bg-indigo-600 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded disabled:opacity-50 disabled:cursor-not-allowed"
@@ -8,7 +8,7 @@
         Install AlgoSigner
       </t-button>
     </div>
-    <div v-else-if="algorand.serviceInstance && !algorand.connected">
+    <div v-else-if="rawStore.serviceInstance && !rawStore.connected">
       <t-button
         classes="block tracking-widest w-full uppercase text-center shadow bg-indigo-600 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded disabled:opacity-50 disabled:cursor-not-allowed"
         @click="onConnect"
@@ -27,7 +27,7 @@
         <span>Waiting for AlgoSigner...</span>
       </t-button>
     </div>
-    <div v-else-if="currentRouteName !== 'Withdraw' && (userState.USR_ASA || userState.USR_ALGOS)">
+    <div v-else-if="currentRouteName !== 'Withdraw' && (userState.USR_B || userState.USR_A)">
       <t-button
         disabled
         classes="block tracking-widest w-full uppercase text-center shadow bg-indigo-600 hover:bg-indigo-700 focus:shadow-outline focus:outline-none text-white text-xs py-3 px-10 rounded disabled:opacity-50 disabled:cursor-not-allowed"
@@ -86,7 +86,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      algorand: 'algorand/algorand',
+      rawStore: 'algorand/rawStore',
       userState: 'algorand/userState',
       isReady: 'algorand/isReadyToTransact',
       isReadyToTransact: 'algorand/isReadyToTransact',

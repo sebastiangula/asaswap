@@ -13,25 +13,25 @@
             You need to withdraw them in full before performing any other operation.
           </p>
         </div>
-        <div v-if="!!(userState.USR_ALGOS || userState.USR_ASA)">
+        <div v-if="!!(userState.USR_A || userState.USR_B)">
           <div>
             <NumberInput
-              :value="assetToDisplay"
-              :label="assetLabel"
+              :value="primaryAssetBalance"
+              :label="currentPair.primaryAsset.assetName"
               disabled
             />
           </div>
           <div class="mt-4">
             <NumberInput
-              label="Algos"
-              :value="algosDisplay"
+              :label="currentPair.secondaryAsset.assetName"
+              :value="secondaryAssetBalance"
               disabled
             />
           </div>
           <div class="py-4">
             <ActionButton
               label="Withdraw"
-              :enable="!!(userState.USR_ALGOS || userState.USR_ASA)"
+              :enable="!!(userState.USR_A || userState.USR_B)"
               :execute="onWithdraw"
             />
           </div>
@@ -48,9 +48,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import NumberInput from '../NumberInput';
-import { getAlgos, getAssetDisplayAmount } from '@/utils/conversion';
 import ActionButton from '../ActionButton';
-import { ASSET_NAME, ASSET_INDEX } from '@/config';
 import Card from './Card';
 
 export default {
@@ -67,40 +65,45 @@ export default {
   },
   computed: {
     ...mapGetters({
-      algorand: 'algorand/algorand',
+      rawStore: 'algorand/rawStore',
       userState: 'algorand/userState',
-      userAssets: 'algorand/userAssets'
+      userAssets: 'algorand/userAssets',
+      currentPair: 'algorand/currentPair'
     }),
-    algosDisplay() {
-      return Number(getAlgos(this.userState.USR_ALGOS || 0));
+    primaryAssetBalance() {
+      return Number(this.currentPair.primaryAsset.getAssetDisplayAmount(this.userState['USR_A'] || 0));
     },
-    assetToDisplay() {
-      return Number(getAssetDisplayAmount(this.userState.USR_ASA || 0));
+    secondaryAssetBalance() {
+      return Number(this.currentPair.secondaryAsset.getAssetDisplayAmount(this.userState['USR_B'] || 0));
     },
-    assetLabel() {
-      return ASSET_NAME;
-    },
-    isOptedInToAsset() {
-      return this.userAssets[ASSET_INDEX];
+    assetsToOptIn() {
+      const assets = [];
+      if (this.currentPair.primaryAsset.assetIndex && !this.userAssets[this.currentPair.primaryAsset.assetIndex]) {
+        assets.push(this.currentPair.primaryAsset);
+      }
+      if (this.currentPair.secondaryAsset.assetIndex && !this.userAssets[this.currentPair.secondaryAsset.assetIndex]) {
+        assets.push(this.currentPair.secondaryAsset);
+      }
+      return assets;
     }
   },
   watch: {
-    isOptedInToAsset(value) {
-      if (value && this.executeAfterOptingIn) {
+    assetsToOptIn(value) {
+      if (value.length === 0 && this.executeAfterOptingIn) {
         this.executeAfterOptingIn = false;
-        const accountAddress = this.algorand.account;
-        this.waitForAction(() => this.algorand.serviceInstance.withdraw(accountAddress, this.userState.USR_ASA, this.userState.USR_ALGOS));
+        const accountAddress = this.rawStore.account;
+        this.waitForAction(() => this.rawStore.serviceInstance.withdraw(accountAddress, this.userState['USR_A'], this.userState['USR_B']));
       }
     }
   },
   methods: {
     async onWithdraw() {
-      const accountAddress = this.algorand.account;
-      if (!this.isOptedInToAsset) {
-        await this.waitForAction(() => this.algorand.serviceInstance.optInAsset(accountAddress), 'Opting-In to Asset...');
+      const accountAddress = this.rawStore.account;
+      if (this.assetsToOptIn.length > 0) {
+        await this.waitForAction(() => this.rawStore.serviceInstance.optInAsset(this.assetsToOptIn[0], accountAddress), 'Opting-In to Asset...');
         this.executeAfterOptingIn = true;
       } else {
-        await this.waitForAction(() => this.algorand.serviceInstance.withdraw(accountAddress, this.userState.USR_ASA, this.userState.USR_ALGOS));
+        await this.waitForAction(() => this.rawStore.serviceInstance.withdraw(accountAddress, this.userState['USR_A'], this.userState['USR_B']));
       }
     }
   }

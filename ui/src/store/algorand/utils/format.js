@@ -1,5 +1,3 @@
-import { APPLICATION_ID } from '@/config';
-
 export function getMappedUserAssets(accountData) {
   const assets = accountData['assets'];
   return Object.assign({}, ...assets.map((value) => {
@@ -9,14 +7,14 @@ export function getMappedUserAssets(accountData) {
   }));
 }
 
-export function getMappedUserState(accountData) {
+export function getMappedUserState(accountData, applicationId) {
   const appStates = accountData['apps-local-state'];
   const statesPerApp = Object.assign({}, ...appStates.map(value => {
     return {
       [value.id]: value
     };
   }));
-  const ourAppState = statesPerApp[APPLICATION_ID];
+  const ourAppState = statesPerApp[applicationId];
   if (!ourAppState) {
     return {};
   }

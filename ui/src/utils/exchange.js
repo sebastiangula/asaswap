@@ -1,73 +1,78 @@
-import { FEE_PERCENTAGE, RATIO } from '@/config';
-
 export class ExchangeCalculator {
-  constructor(globalAlgosAmount, globalAssetAmount) {
-    this.globalAlgosAmount = globalAlgosAmount;
-    this.globalAssetAmount = globalAssetAmount;
+  constructor(globalPrimaryAssetAmount, globalSecondaryAssetAmount, assetPair) {
+    this.globalPrimaryAssetAmount = globalPrimaryAssetAmount;
+    this.globalSecondaryAssetAmount = globalSecondaryAssetAmount;
+    this.assetPair = assetPair;
   }
 
   getGlobalExchangeRate() {
-    return ((this.globalAlgosAmount * RATIO) / this.globalAssetAmount);
+    if (!this.globalPrimaryAssetAmount || !this.globalSecondaryAssetAmount) {
+      return 0;
+    }
+    return ((this.globalPrimaryAssetAmount * this.assetPair.ratio) / this.globalSecondaryAssetAmount);
   }
 
   getReverseGlobalExchangeRate() {
-    return ((this.globalAssetAmount * RATIO) / this.globalAlgosAmount);
+    if (!this.globalPrimaryAssetAmount || !this.globalSecondaryAssetAmount) {
+      return 0;
+    }
+    return ((this.globalSecondaryAssetAmount * this.assetPair.ratio) / this.globalPrimaryAssetAmount);
   }
 
   getSwapExchangeRate(addedAlgos, addedTokens) {
-    return (((this.globalAlgosAmount + addedAlgos) * RATIO) / (this.globalAssetAmount + addedTokens));
+    return (((this.globalPrimaryAssetAmount + addedAlgos) * this.assetPair.ratio) / (this.globalSecondaryAssetAmount + addedTokens));
   }
 
   getReverseSwapExchangeRate(addedAlgos, addedTokens) {
-    return ((this.globalAssetAmount + addedTokens) * RATIO / (this.globalAlgosAmount + addedAlgos));
+    return ((this.globalSecondaryAssetAmount + addedTokens) * this.assetPair.ratio / (this.globalPrimaryAssetAmount + addedAlgos));
   }
 
-  assetToAlgos(assetAmount) {
+  secondaryToPrimary(assetAmount) {
     const exchangeRate = this.getSwapExchangeRate(0, assetAmount);
-    return Math.trunc((exchangeRate * assetAmount * (100 - FEE_PERCENTAGE)) / (RATIO * 100));
+    return Math.trunc((exchangeRate * assetAmount * (100 - this.assetPair.feePercentage)) / (this.assetPair.ratio * 100));
   }
 
-  algosToAsset(algosAmount) {
-    const exchangeRate = this.getSwapExchangeRate(algosAmount, 0);
-    return Math.trunc((algosAmount * (100 - FEE_PERCENTAGE)) * RATIO / 100 / exchangeRate);
+  primaryToSecondary(assetAmount) {
+    const exchangeRate = this.getSwapExchangeRate(assetAmount, 0);
+    return Math.trunc((assetAmount * (100 - this.assetPair.feePercentage)) * this.assetPair.ratio / 100 / exchangeRate);
   }
 
-  getAssetToAlgosFee(assetAmount) {
+  getSecondaryToPrimaryFee(assetAmount) {
     const exchangeRate = this.getSwapExchangeRate(0, assetAmount);
-    return (exchangeRate * assetAmount * FEE_PERCENTAGE) / (RATIO * 100);
+    return (exchangeRate * assetAmount * this.assetPair.feePercentage) / (this.assetPair.ratio * 100);
   }
 
-  getAlgosToAssetFee(algosAmount) {
-    const exchangeRate = this.getSwapExchangeRate(algosAmount, 0);
-    return (algosAmount * FEE_PERCENTAGE * RATIO) / 100 / exchangeRate;
+  getPrimaryToSecondaryFee(assetAmount) {
+    const exchangeRate = this.getSwapExchangeRate(assetAmount, 0);
+    return (assetAmount * this.assetPair.feePercentage * this.assetPair.ratio) / 100 / exchangeRate;
   }
 
-  reverseAssetToAlgos(algosAmount) {
+  reverseSecondaryToPrimary(assetAmount) {
     const value = Math.ceil(
-      Math.trunc(-100 * algosAmount * this.globalAssetAmount * RATIO) /
-      ((100 * algosAmount) + (this.globalAlgosAmount * (FEE_PERCENTAGE - 100))) /
-      RATIO
+      Math.trunc(-100 * assetAmount * this.globalSecondaryAssetAmount * this.assetPair.ratio) /
+      ((100 * assetAmount) + (this.globalPrimaryAssetAmount * (this.assetPair.feePercentage - 100))) /
+      this.assetPair.ratio
     );
     if (value < 0) {
-      return this.reverseAssetToAlgos(
+      return this.reverseSecondaryToPrimary(
         Math.ceil(
-          Math.abs((this.globalAlgosAmount - 1) * (FEE_PERCENTAGE - 100)) / 100
+          Math.abs((this.globalPrimaryAssetAmount - 1) * (this.assetPair.feePercentage - 100)) / 100
         )
       );
     }
     return value;
   }
 
-  reverseAlgosToAsset(assetAmount) {
+  reversePrimaryToSecondary(assetAmount) {
     const value = Math.ceil(
-      Math.trunc((-100 * assetAmount * this.globalAlgosAmount) * RATIO) /
-      ((100 * assetAmount) + (this.globalAssetAmount * (FEE_PERCENTAGE - 100))) /
-      RATIO
+      Math.trunc((-100 * assetAmount * this.globalPrimaryAssetAmount) * this.assetPair.ratio) /
+      ((100 * assetAmount) + (this.globalSecondaryAssetAmount * (this.assetPair.feePercentage - 100))) /
+      this.assetPair.ratio
     );
     if (value < 0) {
-      return this.reverseAlgosToAsset(
+      return this.reversePrimaryToSecondary(
         Math.ceil(
-          Math.abs((this.globalAssetAmount - 1) * (FEE_PERCENTAGE - 100)) / 100
+          Math.abs((this.globalSecondaryAssetAmount - 1) * (this.assetPair.feePercentage - 100)) / 100
         )
       );
     }

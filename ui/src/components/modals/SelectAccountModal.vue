@@ -95,14 +95,14 @@ export default {
   },
   computed: {
     ...mapGetters({
-      algorand: 'algorand/algorand',
+      rawStore: 'algorand/rawStore',
       accounts: 'algorand/accounts'
     })
   },
   mounted() {
     if (this.accounts) {
-      if (this.accounts.indexOf(this.algorand.account) !== -1) {
-        this.selectedAccount = this.algorand.account;
+      if (this.accounts.indexOf(this.rawStore.account) !== -1) {
+        this.selectedAccount = this.rawStore.account;
       } else {
         this.selectedAccount = this.accounts[0];
       }

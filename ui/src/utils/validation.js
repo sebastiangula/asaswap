@@ -11,7 +11,7 @@ export function getInputError(value, decimalPoints, assetName) {
   if (Number(value) <= 0) {
     return 'Enter a valid amount';
   }
-  if (Number(value).toFixed(decimalPoints) != Number(value)) {
+  if (Number(Number(value).toFixed(decimalPoints)) !== Number(value)) {
     if (decimalPoints) {
       return `${assetName} has ${decimalPoints} decimal points`;
     } else {
@@ -28,11 +28,15 @@ export async function validateIfAccountCanAffordTxs(txs) {
     emitInsufficientFundsError();
     throw InsufficientFunds();
   }
-  const assetSpending = countAssetSpending(txs);
-  if (assetSpending > getAssetBalance()) {
-    emitInsufficientFundsError();
-    throw InsufficientFunds();
-  }
+  const assetBalances = getAssetBalances();
+  const assetSpendings = countAssetSpendings(txs);
+  Object.keys(assetSpendings).forEach((assetIndex) => {
+    let assetSpending = assetSpendings[assetIndex];
+    if (assetSpending > assetBalances[assetIndex]) {
+      emitInsufficientFundsError();
+      throw InsufficientFunds();
+    }
+  });
 }
 
 function emitInsufficientFundsError() {
@@ -46,12 +50,12 @@ function getAlgoBalance() {
   return store.getters['algorand/algoBalance'];
 }
 
-function getAssetBalance() {
-  return store.getters['algorand/assetBalance'];
+function getAssetBalances() {
+  return store.getters['algorand/assetBalances'];
 }
 
 function getAccountAddress() {
-  return store.getters['algorand/algorand'].account;
+  return store.getters['algorand/rawStore'].account;
 }
 
 function countAlgoSpending(txs) {
@@ -68,15 +72,18 @@ function countAlgoSpending(txs) {
   return totalSpending;
 }
 
-function countAssetSpending(txs) {
-  let totalSpending = 0;
+function countAssetSpendings(txs) {
+  let spendings = {};
   txs.forEach((tx) => {
     if (tx.from !== getAccountAddress()) {
       return;
     }
     if (tx.amount && tx.type === 'axfer') {
-      totalSpending += tx.amount;
+      if (!spendings[tx.assetIndex]) {
+        spendings[tx.assetIndex] = 0;
+      }
+      spendings[tx.assetIndex] += tx.amount;
     }
   });
-  return totalSpending;
+  return spendings;
 }

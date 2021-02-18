@@ -13,7 +13,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      algorand: 'algorand/algorand',
+      rawStore: 'algorand/rawStore',
     }),
   },
   created() {
@@ -24,10 +24,10 @@ export default {
   },
   methods: {
     updateState() {
-      if (this.algorand.pendingAction) {
+      if (this.rawStore.pendingAction) {
         return;
       }
-      if (this.algorand.connected) {
+      if (this.rawStore.connected) {
         this.$store.dispatch('algorand/FETCH_ACCOUNT_DATA');
       }
       this.$store.dispatch('algorand/FETCH_APPLICATION_DATA');

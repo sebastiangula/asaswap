@@ -39,3 +39,14 @@ export function SET_PENDING_ACTION(state, pendingAction) {
 export function SET_PENDING_ACTION_MESSAGE(state, pendingActionMessage) {
   state.pendingActionMessage = pendingActionMessage;
 }
+
+export function SET_CURRENT_PAIR(state, pairKey) {
+  state.currentPair = pairKey;
+  if (pairKey) {
+    localStorage.setItem('pair', pairKey);
+  }
+}
+
+export function SET_CHANGING_PAIR(state, changingPair) {
+  state.changingPair = changingPair;
+}

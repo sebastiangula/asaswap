@@ -2,7 +2,7 @@
   <div id="app">
     <Navbar />
     <div class="absolute w-full">
-      <WithdrawalAlert v-if="userState.USR_ALGOS || userState.USR_ASA" />
+      <WithdrawalAlert v-if="userState.USR_A || userState.USR_B" />
       <Alert
         v-if="alert.type"
         :header="alert.header"
@@ -14,7 +14,7 @@
     <SelectAccountModal v-if="showSelectAccount" />
     <AccountModal v-if="showAccount" />
     <ActionModal
-      v-if="algorand.pendingUpdate || !!algorand.pendingAction"
+      v-if="rawStore.pendingUpdate || !!rawStore.pendingAction"
       :message="actionMessage"
     />
     <router-view />
@@ -53,17 +53,17 @@ export default {
   },
   computed: {
     ...mapGetters({
-      algorand: 'algorand/algorand',
+      rawStore: 'algorand/rawStore',
       userState: 'algorand/userState'
     }),
     actionMessage() {
-      if (this.algorand.pendingAction) {
-        if (this.algorand.pendingActionMessage) {
-          return this.algorand.pendingActionMessage;
+      if (this.rawStore.pendingAction) {
+        if (this.rawStore.pendingActionMessage) {
+          return this.rawStore.pendingActionMessage;
         } else {
           return 'Processing action...';
         }
-      } else if (this.algorand.pendingUpdate) {
+      } else if (this.rawStore.pendingUpdate) {
         return 'Waiting for update...';
       }
       return '';

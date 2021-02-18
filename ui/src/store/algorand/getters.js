@@ -1,7 +1,8 @@
 import { getMappedUserState, getMappedGlobalState, getMappedUserAssets } from './utils/format';
-import { APPLICATION_ID, ASSET_INDEX } from '@/config';
+import { ExchangeCalculator } from '@/utils/exchange';
+import { ASSET_PAIRS } from '@/utils/assetPairs';
 
-export function algorand(state) {
+export function rawStore(state) {
   return {
     serviceInstance: state.serviceInstance,
     connected: state.connected,
@@ -12,7 +13,7 @@ export function algorand(state) {
     pendingAction: state.pendingAction,
     pendingActionMessage: state.pendingActionMessage,
     pendingUpdate: state.pendingUpdate,
-    fetchedAccounts: state.fetchedAccounts
+    fetchedAccounts: state.fetchedAccounts,
   };
 }
 
@@ -20,7 +21,7 @@ export function userState(state) {
   if (!state.accountData) {
     return {};
   }
-  return getMappedUserState(state.accountData);
+  return getMappedUserState(state.accountData, ASSET_PAIRS[state.currentPair].applicationId);
 }
 
 export function userAssets(state) {
@@ -61,7 +62,8 @@ export function isOptedIn(state) {
   const accountData = state.accountData;
   const appStates = accountData['apps-local-state'];
   const appIds = appStates.map(value => value.id);
-  return appIds.indexOf(APPLICATION_ID) !== -1;
+  const applicationId = ASSET_PAIRS[state.currentPair].applicationId;
+  return appIds.indexOf(applicationId) !== -1;
 }
 
 export function algoBalance(state) {
@@ -75,13 +77,27 @@ export function algoBalance(state) {
   return amount;
 }
 
-export function assetBalance(state, getters) {
+
+export function assetBalances(state, getters) {
   if (!state.accountData) {
-    return 0;
+    return {};
   }
-  const amount = getters.userAssets[ASSET_INDEX] && getters.userAssets[ASSET_INDEX].amount;
-  if (!amount) {
-    return 0;
+  let balances = {};
+  Object.keys(getters.userAssets).forEach((assetIndex) => {
+    let userAsset = getters.userAssets[assetIndex];
+    balances[assetIndex] = userAsset.amount;
+  });
+  return balances;
+}
+
+export function currentPair(state) {
+  return ASSET_PAIRS[state.currentPair];
+}
+
+export function exchangeCalculator(state) {
+  if (!state.applicationData) {
+    return new ExchangeCalculator(0, 0, ASSET_PAIRS[state.currentPair]);
   }
-  return amount;
+  const globalState = getMappedGlobalState(state.applicationData);
+  return new ExchangeCalculator(globalState['A'], globalState['B'], ASSET_PAIRS[state.currentPair]);
 }

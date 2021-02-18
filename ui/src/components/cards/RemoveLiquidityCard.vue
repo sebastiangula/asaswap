@@ -51,15 +51,15 @@
           Corresponding amounts to remove from the pool:
           <div class="flex flex-col">
             <div class="flex flex-row">
-              <div>Algos:</div>
+              <div>{{ primaryAsset.assetName }}:</div>
               <div class="text-right flex-grow font-bold">
-                {{ amountOfAlgosDisplay }}
+                {{ amountOfPrimaryAssetDisplay }}
               </div>
             </div>
             <div class="flex flex-row">
-              <div>{{ assetName }}:</div>
+              <div>{{ secondaryAsset.assetName }}:</div>
               <div class="text-right flex-grow font-bold">
-                {{ amountOfAssetDisplay }}
+                {{ amountOfSecondaryAssetDisplay }}
               </div>
             </div>
           </div>
@@ -70,8 +70,6 @@
 </template>
 <script>
 import { mapGetters } from 'vuex';
-import { getAlgos, getAssetDisplayAmount } from '@/utils/conversion';
-import { ASSET_NAME } from '@/config';
 import NumberInput from '../NumberInput';
 import ActionButton from '../ActionButton';
 import Card from './Card';
@@ -83,11 +81,6 @@ export default {
     ActionButton,
     Card
   },
-  watch: {
-    userState() {
-      this.validate();
-    }
-  },
   data() {
     return {
       liquidityTokens: null,
@@ -96,81 +89,92 @@ export default {
   },
   computed: {
     ...mapGetters({
-      algorand: 'algorand/algorand',
+      rawStore: 'algorand/rawStore',
       isReady: 'algorand/isReady',
       userState: 'algorand/userState',
       globalState: 'algorand/globalState',
+      currentPair: 'algorand/currentPair'
     }),
+    primaryAsset() {
+      return this.currentPair.primaryAsset;
+    },
+    secondaryAsset() {
+      return this.currentPair.secondaryAsset;
+    },
     maximumValueDisplay() {
-      return this.userState.USR_LIQ;
+      return this.userState['USR_LIQ'];
     },
-    assetName() {
-      return ASSET_NAME;
-    },
-    amountOfAlgos() {
-      if (this.globalState.LIQ_TOKENS === 0) {
+    amountOfPrimaryAsset() {
+      if (this.globalState['LIQ'] === 0) {
         return;
       }
-      const value =
-        (this.globalState.ALGOS_BAL * this.liquidityTokens) /
-          this.globalState.LIQ_TOKENS -
-        2000;
+      let value = Math.trunc(
+        (this.globalState['A'] * this.liquidityTokens) /
+          this.globalState['LIQ']
+      );
       if (typeof value !== 'number' || isNaN(value)) {
         return;
       }
-      if (value < 0) {
+      return this.primaryAsset.getAssetDisplayAmount(value);
+    },
+    amountOfSecondaryAsset() {
+      if (this.globalState['LIQ'] === 0) {
+        return;
+      }
+      const value = Math.trunc(
+        (this.globalState['B'] * this.liquidityTokens) /
+        this.globalState['LIQ']
+      );
+      if (typeof value !== 'number' || isNaN(value)) {
+        return value;
+      }
+      return this.secondaryAsset.getAssetDisplayAmount(value);
+    },
+    amountOfPrimaryAssetDisplay() {
+      if (typeof this.amountOfPrimaryAsset !== 'number') {
+        return 'N/A';
+      }
+      if (this.amountOfPrimaryAsset < 0) {
         return 0;
       }
-      return getAlgos(value);
+      return this.amountOfPrimaryAsset;
     },
-    amountOfAsset() {
-      if (this.globalState.LIQ_TOKENS === 0) {
-        return;
-      }
-      const value =
-        (this.globalState.ASA_BAL * this.liquidityTokens) /
-        this.globalState.LIQ_TOKENS;
-      if (typeof value !== 'number' || isNaN(value)) {
-        return;
-      }
-      return getAssetDisplayAmount(value);
-    },
-    amountOfAlgosDisplay() {
-      if (typeof this.amountOfAlgos !== 'number') {
+    amountOfSecondaryAssetDisplay() {
+      if (typeof this.amountOfPrimaryAsset !== 'number') {
         return 'N/A';
       }
-      return this.amountOfAlgos;
+      return this.amountOfSecondaryAsset;
     },
-    amountOfAssetDisplay() {
-      if (typeof this.amountOfAsset !== 'number') {
-        return 'N/A';
-      }
-      return this.amountOfAsset;
+  },
+  watch: {
+    userState() {
+      this.validate();
     },
+    currentPair() {
+      this.liquidityTokens = null;
+      this.validate();
+    }
   },
   methods: {
     validate() {
-      const userLiquidity = this.userState.USR_LIQ ? Number(this.userState.USR_LIQ) : 0;
+      const userLiquidity = this.userState['USR_LIQ'] ? Number(this.userState['USR_LIQ']) : 0;
       if (Number(this.liquidityTokens) <= 0) {
         this.error = 'Enter a valid amount';
       } else if (Number(this.liquidityTokens) > userLiquidity) {
         this.error = 'Enter a valid amount';
       } else if (!Number.isInteger(Number(this.liquidityTokens))) {
         this.error = 'Must be an integer';
-      } else if (!(this.amountOfAlgos > 0 || this.amountOfAsset > 0)) {
+      } else if (!(this.amountOfPrimaryAsset > 0 || this.amountOfSecondaryAssetDisplay > 0)) {
         this.error = 'Enter a valid amount';
       } else {
         this.error = null;
       }
       return !this.error;
     },
-    resetError() {
-      this.error = null;
-    },
     async onAddLiquidity() {
-      const accountAddress = this.algorand.account;
+      const accountAddress = this.rawStore.account;
       await this.waitForAction(() =>
-        this.algorand.serviceInstance.removeLiquidity(
+        this.rawStore.serviceInstance.removeLiquidity(
           accountAddress,
           this.liquidityTokens
         )

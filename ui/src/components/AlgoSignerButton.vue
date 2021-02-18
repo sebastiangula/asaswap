@@ -1,14 +1,14 @@
 <template>
-  <div>
-    <div v-if="!algorand.serviceInstance">
+  <div class="flex pr-2">
+    <div v-if="!rawStore.serviceInstance">
       <t-button
-        class="inline-flex items-center h-8 px-4 m-2 text-sm text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800"
+        class="inline-flex whitespace-nowrap items-center h-8 px-4 m-2 text-sm text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800"
         @click="onInstallAlgoSigner"
       >
         Install AlgoSigner
       </t-button>
     </div>
-    <div v-else-if="algorand.serviceInstance && !algorand.connected">
+    <div v-else-if="rawStore.serviceInstance && !rawStore.connected">
       <t-button
         class="inline-flex items-center h-8 px-4 m-2 text-sm text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800"
         @click="onConnect"
@@ -17,20 +17,19 @@
       </t-button>
     </div>
     <t-button
-      v-else-if="!algorand.fetchedAccounts"
-      class="inline-flex items-center h-8 px-4 m-2 text-sm text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800"
+      v-else-if="!rawStore.fetchedAccounts"
+      class="inline-flex whitespace-nowrap items-center h-8 px-4 m-2 text-sm text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800"
     >
       Please wait...
     </t-button>
     <t-button
-      v-else-if="algorand.accounts.length === 0"
-      class="inline-flex items-center h-8 px-4 m-2 text-sm text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800"
+      v-else-if="rawStore.accounts.length === 0"
+      class="inline-flex whitespace-nowrap items-center h-8 px-4 m-2 text-sm text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800"
     >
       No accounts
     </t-button>
     <div
       v-else-if="isReady"
-      class="flex"
     >
       <t-button
         class="inline-flex items-center h-8 px-4 m-2 text-sm text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800"
@@ -42,18 +41,19 @@
           class="logo ml-2"
         >
       </t-button>
-      <t-button
-        class="ml-2 inline-flex items-center h-8 px-4 m-2 text-sm text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800"
-        @click="onShowAccount"
-      >
-        Balances
-      </t-button>
     </div>
     <t-button
       v-else
-      class="inline-flex items-center h-8 px-4 m-2 text-sm text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800"
+      class="inline-flex whitespace-nowrap items-center h-8 px-4 m-2 text-sm text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800"
     >
       Please wait...
+    </t-button>
+    <t-button
+      class="ml-2 inline-flex items-center h-8 px-4 m-2 text-sm text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800"
+      :disabled="!isReady"
+      @click="onShowAccount"
+    >
+      Balances
     </t-button>
   </div>
 </template>
@@ -70,12 +70,12 @@ export default {
   },
   computed: {
     ...mapGetters({
-      algorand: 'algorand/algorand',
+      rawStore: 'algorand/rawStore',
       isOptedIn: 'algorand/isOptedIn',
       isReady: 'algorand/isReady'
     }),
     accountDisplay() {
-      const account = this.algorand.account;
+      const account = this.rawStore.account;
       return (
         account.substring(0, 3) +
         '...' +
