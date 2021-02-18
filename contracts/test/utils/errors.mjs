@@ -1,9 +1,9 @@
 // Original file: https://github.com/scale-it/algorand-builder/blob/master/packages/runtime/test/helpers/errors.ts
 
-import { TealError } from '@algorand-builder/runtime/build/errors/errors.js';
+import { RuntimeError } from '@algorand-builder/runtime/build/errors/runtime-errors.js';
 import chai from 'chai';
 
-const {assert, AssertionError} = chai;
+const { assert, AssertionError } = chai;
 
 // Takes string array and executes opcode to expect teal error
 export function execExpectError(stack, strs, op, err) {
@@ -19,7 +19,7 @@ export function expectTealError(f, errorDescriptor, matchMessage = undefined, er
   try {
     f();
   } catch (error) {
-    assert.instanceOf(error, TealError, errorMessage);
+    assert.instanceOf(error, RuntimeError, errorMessage);
     assert.equal(error.number, errorDescriptor.number, errorMessage);
     assert.notMatch(
       error.message,
@@ -60,7 +60,7 @@ export async function expectTealErrorAsync(f, errorDescriptor, matchMessage = un
   try {
     await f();
   } catch (error) {
-    assert.instanceOf(error, TealError);
+    assert.instanceOf(error, RuntimeError);
     assert.equal(error.number, errorDescriptor.number);
     assert.notMatch(
       error.message,

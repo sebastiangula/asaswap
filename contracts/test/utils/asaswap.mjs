@@ -3,14 +3,14 @@ import { SignType, TransactionType } from '@algorand-builder/runtime/build/types
 
 
 class AsaswapManager {
-  constructor(runtime, creator) {
+  constructor(runtime, creator, assetId) {
     this.creator = creator;
     this.runtime = runtime;
-    this.assetID = 123;
+    this.assetId = assetId;
     this.program = getProgram('state.py');
 
     this.creationArgs = [
-      'int:123',
+      `int:${assetId}`,
     ];
     this.flags = {
       sender: creator.account,
@@ -27,7 +27,6 @@ class AsaswapManager {
   setupApplication() {
     this.creationFlags = Object.assign({}, this.flags);
     this.applicationId = this.runtime.addApp({...this.creationFlags, appArgs: this.creationArgs}, {}, this.program);
-    this.runtime.store.assetDefs.set(123, this.creator.address);
   }
 
   setupEscrow() {
@@ -60,6 +59,7 @@ class AsaswapManager {
   }
 
   escrowOptInToAsset() {
+    this.runtime.optIntoASA(this.assetId, this.escrow.address, {}); // opt-in tx doesn't work
     let txGroup = [
       {
         type: TransactionType.CallNoOpSSC,
@@ -71,7 +71,7 @@ class AsaswapManager {
       },
       {
         type: TransactionType.TransferAsset,
-        assetID: this.assetID,
+        assetID: this.assetId,
         sign: SignType.LogicSignature,
         lsig: this.lSig,
         fromAccount: this.escrow.account,
@@ -119,7 +119,7 @@ class AsaswapManager {
     this.runtime.optInToApp(address, this.applicationId, {}, {}, this.program);
   }
 
-  addLiquidity(fromAccount, escrowAddress, assetAmount, microAlgosAmount, assetId = 123) {
+  addLiquidity(fromAccount, escrowAddress, assetAmount, microAlgosAmount, assetId = null) {
     let appArgs = [stringToBytes('ADD_LIQUIDITY')];
     let txGroup = [
       {
@@ -170,7 +170,7 @@ class AsaswapManager {
     this.runtime.executeTx(txGroup, this.program, []);
   }
 
-  assetSwap(fromAccount, escrowAddress, assetAmount, assetId = 123) {
+  assetSwap(fromAccount, escrowAddress, assetAmount, assetId = null) {
     let appArgs = [stringToBytes('SWAP')];
     let txGroup = [
       {
@@ -183,7 +183,7 @@ class AsaswapManager {
       },
       {
         type: TransactionType.TransferAsset,
-        assetID: assetId,
+        assetID: assetId || this.assetId,
         sign: SignType.SecretKey,
         fromAccount: fromAccount,
         toAccountAddr: escrowAddress,

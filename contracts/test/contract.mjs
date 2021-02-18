@@ -2,19 +2,19 @@
 
 import { addressToPk } from '@algorand-builder/algob';
 import { Runtime, StoreAccount } from '@algorand-builder/runtime';
-import { ERRORS } from '@algorand-builder/runtime/build/errors/errors-list.js';
+import { RUNTIME_ERRORS } from '@algorand-builder/runtime/build/errors/errors-list.js';
 import chai from 'chai';
 import { expectTealError } from './utils/errors.mjs';
 import AsaswapManager from './utils/asaswap.mjs';
 
-const {assert} = chai;
+const { assert } = chai;
 
 
 describe('Asaswap Tests', function () {
   const minBalance = 10e6;
-  let master = new StoreAccount(1000e6);
-  let creator = new StoreAccount(minBalance);
-  let swapper = new StoreAccount(minBalance);
+  let master;
+  let creator;
+  let swapper;
 
   let runtime;
   let asaswap;
@@ -23,24 +23,64 @@ describe('Asaswap Tests', function () {
   const getLocal = (accountAddr, key) => runtime.getLocalState(asaswap.getApplicationId(), accountAddr, key);
 
   this.beforeEach(() => {
-    master.createdAssets[1] = {
+    master = new StoreAccount(1000e6);
+    creator = new StoreAccount(minBalance);
+    swapper = new StoreAccount(minBalance);
+    master.addAsset(123, 'ASSET', {
       creator: 'addr-1',
-      total: 10000,
+      total: 10000000,
       decimals: 10,
-      'default-frozen': 'false',
-      'unit-name': 'AD',
-      name: 'ASSETAD',
+      defaultFrozen: false,
+      unitName: 'ASSET',
+      name: 'ASSET',
       url: 'assetUrl',
-      'metadata-hash': 'hash',
+      metadataHash: 'hash',
       manager: 'addr-1',
       reserve: 'addr-2',
       freeze: 'addr-3',
       clawback: 'addr-4'
-    };
+    });
+    master.addAsset(111, 'ANOTHER', {
+      creator: 'addr-1',
+      total: 10000000,
+      decimals: 10,
+      defaultFrozen: false,
+      unitName: 'ASSET',
+      name: 'ASSET',
+      url: 'assetUrl',
+      metadataHash: 'hash',
+      manager: 'addr-1',
+      reserve: 'addr-2',
+      freeze: 'addr-3',
+      clawback: 'addr-4'
+    });
     runtime = new Runtime([master, creator, swapper]);
-    asaswap = new AsaswapManager(runtime, creator);
+    runtime.store.assetDefs.set(123, master.address);
+    runtime.store.assetDefs.set(111, master.address);
+    runtime.optIntoASA(123, master.address, {});
+    runtime.optIntoASA(111, master.address, {});
+    runtime.optIntoASA(123, creator.address, {});
+    runtime.optIntoASA(123, swapper.address, {});
+    runtime.transferAsset({
+      assetID: 123,
+      fromAccount: master.account,
+      toAccountAddr: creator.address,
+      amount: 1000000,
+      payFlags: {
+        totalFee: 1000
+      }
+    });
+    runtime.transferAsset({
+      assetID: 123,
+      fromAccount: master.account,
+      toAccountAddr: swapper.address,
+      amount: 1000000,
+      payFlags: {
+        totalFee: 1000
+      }
+    });
+    asaswap = new AsaswapManager(runtime, creator, 123);
   });
-
 
   it('throws errors after trying to opt-in escrow after finishing setup', () => {
     asaswap.setupApplication(master);
@@ -50,7 +90,7 @@ describe('Asaswap Tests', function () {
 
     expectTealError(
       () => asaswap.escrowOptInToAsset(),
-      ERRORS.TEAL.INVALID_TYPE
+      RUNTIME_ERRORS.TEAL.INVALID_TYPE
     );
   });
 
@@ -60,12 +100,12 @@ describe('Asaswap Tests', function () {
 
     expectTealError(
       () => asaswap.removeLiquidity(master.account, 8000000),
-      ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
+      RUNTIME_ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
     );
     asaswap.addLiquidity(master.account, asaswap.getEscrowAddress(), 10, 7000000);
     expectTealError(
       () => asaswap.removeLiquidity(master.account, 8000000),
-      ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
+      RUNTIME_ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
     );
   });
 
@@ -75,7 +115,7 @@ describe('Asaswap Tests', function () {
 
     expectTealError(
       () => asaswap.withdraw(master, 0, 0),
-      ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
+      RUNTIME_ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
     );
   });
 
@@ -85,15 +125,15 @@ describe('Asaswap Tests', function () {
 
     expectTealError(
       () => asaswap.withdraw(master, 121, 0),
-      ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
+      RUNTIME_ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
     );
     expectTealError(
       () => asaswap.withdraw(master, 0, 121),
-      ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
+      RUNTIME_ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
     );
     expectTealError(
       () => asaswap.withdraw(master, 121, 121),
-      ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
+      RUNTIME_ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
     );
   });
 
@@ -110,15 +150,15 @@ describe('Asaswap Tests', function () {
 
     expectTealError(
       () => asaswap.withdraw(master, 121, 121),
-      ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
+      RUNTIME_ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
     );
     expectTealError(
       () => asaswap.withdraw(master, 6000000, 0),
-      ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
+      RUNTIME_ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
     );
     expectTealError(
       () => asaswap.withdraw(master, 0, 6998000),
-      ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
+      RUNTIME_ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
     );
   });
 
@@ -135,15 +175,15 @@ describe('Asaswap Tests', function () {
 
     expectTealError(
       () => asaswap.withdraw(master, 5142857, 5998000, 10000, 1000),
-      ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
+      RUNTIME_ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
     );
     expectTealError(
       () => asaswap.withdraw(master, 5142857, 5998000, 10000, 10000),
-      ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
+      RUNTIME_ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
     );
     expectTealError(
       () => asaswap.withdraw(master, 5142857, 5998000, 1000, 10000),
-      ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
+      RUNTIME_ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
     );
   });
 
@@ -152,7 +192,7 @@ describe('Asaswap Tests', function () {
     asaswap.optIn(master.address);
     expectTealError(
       () => asaswap.addLiquidity(master.account, swapper.address, 6000000, 7000000),
-      ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
+      RUNTIME_ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
     );
   });
 
@@ -161,7 +201,7 @@ describe('Asaswap Tests', function () {
     asaswap.optIn(master.address);
     expectTealError(
       () => asaswap.addLiquidity(master.account, asaswap.getEscrowAddress(), 6000000, 7000000, 111),
-      ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
+      RUNTIME_ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
     );
   });
 
@@ -172,7 +212,7 @@ describe('Asaswap Tests', function () {
     asaswap.addLiquidity(master.account, asaswap.getEscrowAddress(), 6000000, 7000000);
     expectTealError(
       () => asaswap.assetSwap(swapper.account, asaswap.getEscrowAddress(), 100, 111),
-      ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
+      RUNTIME_ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
     );
   });
 
@@ -183,7 +223,7 @@ describe('Asaswap Tests', function () {
     asaswap.addLiquidity(master.account, asaswap.getEscrowAddress(), 6000000, 7000000);
     expectTealError(
       () => asaswap.assetSwap(swapper.account, master.address, 100, 111),
-      ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
+      RUNTIME_ERRORS.TEAL.TEAL_ENCOUNTERED_ERR
     );
   });
 
