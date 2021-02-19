@@ -5,6 +5,7 @@ class State:
     """
     Wrapper around state vars.
     """
+
     def __init__(self, name: str):
         self._name = name
 

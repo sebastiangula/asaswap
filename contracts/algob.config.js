@@ -22,8 +22,8 @@ let accounts = mkAccounts([{
   // This account is created using `make setup-master-account` command from our
   // `/infrastructure` directory. It already has many ALGOs
   name: "master",
-  addr: "WRCP75XBWAVI65EATNTGMVDFKZPQWDYGKIAJLJ4U2PQAG3KWEFPCNYR2GY",
-  mnemonic: "crane glue legend bid room fresh demise gold strike opinion cute tilt tray behave panic possible defy junior damage easily inmate coconut steel able before"
+  addr: "JRJPHXJS5RLAVMCNOIVUNWF7EA5NOD3MU6LUUS2RNALMNQ3SYS6BG7C6Z4",
+  mnemonic: "blouse thought giggle bread asset squirrel grief buddy horror wet grab update patrol abuse range rally magnet april chuckle pyramid team maid exist abandon whip"
 }]);
 
 // ## ACCOUNTS loaded from a FILE ##
@@ -46,10 +46,10 @@ let accounts = mkAccounts([{
 
 let defaultCfg = {
   host: "http://127.0.0.1",
-  port: 4001,
+  port: 8777,
   // Below is a token created through our script in `/infrastructure`
   // If you use other setup, update it accordignly (eg content of algorand-node-data/algod.token)
-  token: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  token: "a136e80ac4e1f54add873633eb786f740f19ba839c6c5a59ee6a36744d191583",
   accounts: accounts,
   // if you want to load accounts from KMD, you need to add the kmdCfg object. Please read
   // algob-config.md documentation for details.

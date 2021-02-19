@@ -1,31 +1,31 @@
 filename: clear.py
-timestamp: 1612183202
-compiled: AiABACYGFlRPVEFMX0xJUVVJRElUWV9UT0tFTlMVVVNFUl9MSVFVSURJVFlfVE9LRU5TDUFMR09TX0JBTEFOQ0URQUxHT1NfVE9fV0lUSERSQVcOVE9LRU5TX0JBTEFOQ0USVE9LRU5TX1RPX1dJVEhEUkFXKChkIiliCWcqKmQiK2IIZycEJwRkIicFYghn
-compiledHash: MH3EXCYAVYHIJBYO4HCVOIU4CXOKPTPEVRBCNYRNDRPLZZW7KD6WSEWY5Y
-srcHash: 550508227
+timestamp: 1614090546
+compiled: AiABACYGA0xJUQdVU1JfTElRAUEFVVNSX0EBQgVVU1JfQigoZCIpYglnKipkIitiCGcnBCcEZCInBWIIZw==
+compiledHash: LUHTEMZV3MNLXFHVJ5CNO7Y5RGTEVLBWWB4VACDYCZGFZP25PKG4MLFDWU
+srcHash: 4058967916
 tealCode: |
   #pragma version 2
-  byte "TOTAL_LIQUIDITY_TOKENS"
-  byte "TOTAL_LIQUIDITY_TOKENS"
+  byte "LIQ"
+  byte "LIQ"
   app_global_get
   int 0
-  byte "USER_LIQUIDITY_TOKENS"
+  byte "USR_LIQ"
   app_local_get
   -
   app_global_put
-  byte "ALGOS_BALANCE"
-  byte "ALGOS_BALANCE"
+  byte "A"
+  byte "A"
   app_global_get
   int 0
-  byte "ALGOS_TO_WITHDRAW"
+  byte "USR_A"
   app_local_get
   +
   app_global_put
-  byte "TOKENS_BALANCE"
-  byte "TOKENS_BALANCE"
+  byte "B"
+  byte "B"
   app_global_get
   int 0
-  byte "TOKENS_TO_WITHDRAW"
+  byte "USR_B"
   app_local_get
   +
   app_global_put
@@ -36,117 +36,34 @@ base64ToBytes:
   - 0
   - 38
   - 6
-  - 22
-  - 84
-  - 79
-  - 84
-  - 65
-  - 76
-  - 95
+  - 3
   - 76
   - 73
   - 81
-  - 85
-  - 73
-  - 68
-  - 73
-  - 84
-  - 89
-  - 95
-  - 84
-  - 79
-  - 75
-  - 69
-  - 78
-  - 83
-  - 21
+  - 7
   - 85
   - 83
-  - 69
   - 82
   - 95
   - 76
   - 73
   - 81
+  - 1
+  - 65
+  - 5
   - 85
-  - 73
-  - 68
-  - 73
-  - 84
-  - 89
+  - 83
+  - 82
   - 95
-  - 84
-  - 79
-  - 75
-  - 69
-  - 78
-  - 83
-  - 13
   - 65
-  - 76
-  - 71
-  - 79
+  - 1
+  - 66
+  - 5
+  - 85
   - 83
+  - 82
   - 95
   - 66
-  - 65
-  - 76
-  - 65
-  - 78
-  - 67
-  - 69
-  - 17
-  - 65
-  - 76
-  - 71
-  - 79
-  - 83
-  - 95
-  - 84
-  - 79
-  - 95
-  - 87
-  - 73
-  - 84
-  - 72
-  - 68
-  - 82
-  - 65
-  - 87
-  - 14
-  - 84
-  - 79
-  - 75
-  - 69
-  - 78
-  - 83
-  - 95
-  - 66
-  - 65
-  - 76
-  - 65
-  - 78
-  - 67
-  - 69
-  - 18
-  - 84
-  - 79
-  - 75
-  - 69
-  - 78
-  - 83
-  - 95
-  - 84
-  - 79
-  - 95
-  - 87
-  - 73
-  - 84
-  - 72
-  - 68
-  - 82
-  - 65
-  - 87
   - 40
   - 40
   - 100

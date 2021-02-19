@@ -1,8 +1,8 @@
 filename: escrow.py
-timestamp: 1612975233
-compiled: AiAHAgN7BgQAASYCDFNFVFVQX0VTQ1JPVwhXSVRIRFJBVzIEIhJAAAgyBCMSQAArADMAGCQSMwAQJRIQNwAaACgSEDMBECEEEhAzARIhBRIQQAABACEGQ0IAQzMAGCQSMwAQJRIQNwAaACkSEDMBECEEEhAzAhAhBhIQMwEBMgASEDMCATIAEhAzARIhBQ0zAgghBQ0REEAAAQAhBkM=
-compiledHash: 54PCANI4R7YV4F5OHC2KEMQMPQOWB2MLUEIZ2BI4OV3JKSGQZIL26WGVIM
-srcHash: 1552248917
+timestamp: 1614090546
+compiled: AiAGAgR7BgABJgIMU0VUVVBfRVNDUk9XCFdJVEhEUkFXMgQiEkAACDIEIxJAACoAMwAYJBIzABAlEhA3ABoAKBIQMwEQIxIQMwESIQQSEEAAAQAhBUNCAE8zABgkEjMAECUSEDcAGgApEhAzARAjEhAzAhAhBRIzAhAjEhEQMwEBMgASEDMCATIAEhAzARIhBA0zAgghBA0RMwISIQQNERBAAAEAIQVD
+compiledHash: 5DAHE4ZYF75EBQD2PW6TRTMXRCF7IKAGTO2GRP5KS6LKHQJUNT5HO3BRF4
+srcHash: 3743251571
 tealCode: |
   #pragma version 2
   global GroupSize
@@ -10,7 +10,7 @@ tealCode: |
   ==
   bnz l0
   global GroupSize
-  int 3
+  int 4
   ==
   bnz l1
   err
@@ -59,6 +59,10 @@ tealCode: |
   gtxn 2 TypeEnum
   int pay
   ==
+  gtxn 2 TypeEnum
+  int axfer
+  ==
+  ||
   &&
   gtxn 1 Fee
   global MinTxnFee
@@ -75,6 +79,10 @@ tealCode: |
   int 0
   >
   ||
+  gtxn 2 AssetAmount
+  int 0
+  >
+  ||
   &&
   bnz l4
   err
@@ -85,12 +93,11 @@ tealCode: |
 base64ToBytes:
   - 2
   - 32
-  - 7
+  - 6
   - 2
-  - 3
+  - 4
   - 123
   - 6
-  - 4
   - 0
   - 1
   - 38
@@ -130,7 +137,7 @@ base64ToBytes:
   - 18
   - 64
   - 0
-  - 43
+  - 42
   - 0
   - 51
   - 0
@@ -153,15 +160,14 @@ base64ToBytes:
   - 51
   - 1
   - 16
-  - 33
-  - 4
+  - 35
   - 18
   - 16
   - 51
   - 1
   - 18
   - 33
-  - 5
+  - 4
   - 18
   - 16
   - 64
@@ -169,11 +175,11 @@ base64ToBytes:
   - 1
   - 0
   - 33
-  - 6
+  - 5
   - 67
   - 66
   - 0
-  - 67
+  - 79
   - 51
   - 0
   - 24
@@ -195,42 +201,54 @@ base64ToBytes:
   - 51
   - 1
   - 16
-  - 33
-  - 4
+  - 35
   - 18
   - 16
   - 51
   - 2
   - 16
-  - 33
-  - 6
-  - 18
-  - 16
-  - 51
-  - 1
-  - 1
-  - 50
-  - 0
-  - 18
-  - 16
-  - 51
-  - 2
-  - 1
-  - 50
-  - 0
-  - 18
-  - 16
-  - 51
-  - 1
-  - 18
   - 33
   - 5
+  - 18
+  - 51
+  - 2
+  - 16
+  - 35
+  - 18
+  - 17
+  - 16
+  - 51
+  - 1
+  - 1
+  - 50
+  - 0
+  - 18
+  - 16
+  - 51
+  - 2
+  - 1
+  - 50
+  - 0
+  - 18
+  - 16
+  - 51
+  - 1
+  - 18
+  - 33
+  - 4
   - 13
   - 51
   - 2
   - 8
   - 33
-  - 5
+  - 4
+  - 13
+  - 17
+  - 51
+  - 2
+  - 18
+  - 33
+  - 4
   - 13
   - 17
   - 16
@@ -239,5 +257,5 @@ base64ToBytes:
   - 1
   - 0
   - 33
-  - 6
+  - 5
   - 67

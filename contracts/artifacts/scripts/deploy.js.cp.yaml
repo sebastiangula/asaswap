@@ -1,0 +1,11 @@
+default:
+    timestamp: 1614090084115
+    metadata: {}
+    asa: {}
+    ssc:
+        state.py-clear.py:
+            creator: JRJPHXJS5RLAVMCNOIVUNWF7EA5NOD3MU6LUUS2RNALMNQ3SYS6BG7C6Z4
+            txId: W3G53NSEP4BXAA6PVUK7OYCEUVBZPIEUXCPEYQULBZOM7OL5LHAQ
+            confirmedRound: 12526116
+            appID: 14180891
+    dLsig: {}

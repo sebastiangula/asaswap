@@ -1,8 +1,8 @@
 filename: state.py
-timestamp: 1612975233
-compiled: AiALAAEEBQIDwIQ9kE4GYWQmDwZVUERBVEUNQUREX0xJUVVJRElUWRBSRU1PVkVfTElRVUlESVRZBFNXQVAIV0lUSERSQVcMU0VUVVBfRVNDUk9XCUFTU0VUX0lEWAdBU0FfQkFMCUFMR09TX0JBTApMSVFfVE9LRU5TDENSRUFUT1JfQUREUgdVU1JfQVNBCVVTUl9BTEdPUwdVU1JfTElRC0VTQ1JPV19BRERSMRgiEkAASzEZIxJAAGExGSQlERJAAGwxGSEEEkAAaTYaACgSQAB8NhoAKRJAAI82GgAqEkABiDYaACsSQAH/NhoAJwQSQAKrNhoAJwUSQALkACcGNhoAF2cnByJnJwgiZycJImcnCjEAZyNDQgLZIicLImYiJwwiZiInDSJmI0NCAsUiQ0ICwCInC2IiEiInDGIiEhAiJw1iIhIQQAABAEICpTEAJwpkEicOZCISEEAAAQAnDjYcAWcjQ0ICijIEIQUSMwEQJBIQMwEUJw5kEhAzAREnBmQSEDMCECMSEDMCBycOZBIQQAABACcHZCITJwhkIhMQQQBvJwhkIQYLJwdkCjMCCCEGCzMBEgoPQAAtMwIIIQYLMwESCicIZCEGCycHZAoJIQYLJwhkIQYLJwdkCgohBwxAAAEAQgAqJwhkIQYLJwdkCjMCCCEGCzMBEgoJIQYLJwhkIQYLJwdkCgohBwxAAAEAJwlkIhJAACkiJw0iJw1iMwIIJwlkCycIZAoIZicJJwlkMwIIJwlkCycIZAoIZ0IADSInDTMCCGYnCTMCCGcnBycHZDMBEghnJwgnCGQzAggIZyNDQgGJMgQjEiInDWI2GgEXDxAiJwxiIhIQIicLYiISEEAAAQAiJwwnCGQ2GgEXCycJZAoyAAkyAAlmIicLJwdkNhoBFwsnCWQKZiInDSInDWI2GgEXCWYnCScJZDYaARcJZycIJwhkIicMYgkyAAkyAAlnJwcnB2QiJwtiCWcjQ0IBCjIEIQQSMwAQIQgSECInDGIiEhAiJwtiIhIQQAABADMBECQSQAAJMwEQIxJAAEcAMwEUJw5kEjMBEScGZBIQQAABACcHJwdkMwESCGciJwwnCGQhBgsnB2QKMwESCyEJCyEGCiEKCmYnCCcIZCInDGIJZ0IAOzMBBycOZBJAAAEAJwgnCGQzAQgIZyInCzMBCCEJCyEGCyEKCicIZCEGCycHZAoKZicHJwdkIicLYglnI0NCAFUyBCEFEjMBEiInC2ISEDMBACcOZBIQMwERJwZkEhAzAggiJwxiEhAzAgAnDmQSEEAAAQAiJwsiZiInDCJmI0NCABMzAAAnCmQSJw5kIhIQQAABACND
-compiledHash: YYAMSTWOVZS5KA6BVPDZZ27LNSWB74PTBN7ITGPFKNSMW7UINJQH5GLMZY
-srcHash: 2910826723
+timestamp: 1614090078
+compiled: AiALAAEEBQIDwIQ9kE4GYWQmEAZVUERBVEUNQUREX0xJUVVJRElUWRBSRU1PVkVfTElRVUlESVRZBFNXQVAIV0lUSERSQVcMU0VUVVBfRVNDUk9XBUJfSURYBUFfSURYAUIBQQNMSVEDQ1JUBVVTUl9CBVVTUl9BB1VTUl9MSVEDRVNDMRgiEkAASzEZIxJAAGgxGSQlERJAAHMxGSEEEkAAcDYaACgSQACDNhoAKRJAAJY2GgAqEkABlzYaACsSQAICNhoAJwQSQAKzNhoAJwUSQAMRACcGNhoAF2cnBzYaARdnJwgiZycJImcnCiJnJwsxAGcjQ0IC/yInDCJmIicNImYiJw4iZiNDQgLrIkNCAuYiJwxiIhIiJw1iIhIQIicOYiISEEAAAQBCAssxACcLZBInD2QiEhBAAAEAJw82HAFnI0NCArAyBCEFEjMBECQSEDMBFCcPZBIQMwERJwZkEhAzAhAkEjMCEScHZBIQMwIUJw9kEhAQQAABACcIZCITJwlkIhMQQQBvJwlkIQYLJwhkCjMCEiEGCzMBEgoPQAAtMwISIQYLMwESCicJZCEGCycIZAoJIQYLJwlkIQYLJwhkCgohBwxAAAEAQgAqJwlkIQYLJwhkCjMCEiEGCzMBEgoJIQYLJwlkIQYLJwhkCgohBwxAAAEAJwpkIhJAACkiJw4iJw5iMwISJwpkCycJZAoIZicKJwpkMwISJwpkCycJZAoIZ0IADSInDjMCEmYnCjMCEmcnCCcIZDMBEghnJwknCWQzAhIIZyNDQgGnMgQjEiInDmI2GgEXDxAiJw1iIhIQIicMYiISEEAAAQAiJw0nCWQ2GgEXCycKZApmIicMJwhkNhoBFwsnCmQKZiInDiInDmI2GgEXCWYnCicKZDYaARcJZycJJwlkIicNYglnJwgnCGQiJwxiCWcjQ0IBNDIEIQQSMwAQIQgSECInDWIiEhAiJwxiIhIQQAABADMBECQSMwERJwZkEhBAABkzARAkEjMBEScHZBIQMwEUJw9kEhBAAD8AMwEUJw9kEkAAAQAnCCcIZDMBEghnIicNJwlkIQYLJwhkCjMBEgshCQshBgohCgpmJwknCWQiJw1iCWdCADAnCScJZDMBEghnIicMMwESIQkLIQYLIQoKJwlkIQYLJwhkCgpmJwgnCGQiJwxiCWcjQ0IAejIEJBIzARIiJwxiEhAzAQAnD2QSEDMBEScGZBIQMwIQJBIzAhEnB2QSEDMCACcPZBIQEDMCEiInDWISEDMDADMAABIQMwMQIxIQMwMIMgAyAAgPEEAAAQAiJwwiZiInDSJmI0NCABMzAAAnC2QSJw9kIhIQQAABACND
+compiledHash: MJSYYBZBCEZ6VVPPG3AMX6MF6WA62OBSIMVCWFC4S5HHM7RF22SZFILFDE
+srcHash: 2847050948
 tealCode: |
   #pragma version 2
   txn ApplicationID
@@ -49,20 +49,24 @@ tealCode: |
   bnz l9
   err
   l0:
-  byte "ASSET_IDX"
+  byte "B_IDX"
   txna ApplicationArgs 0
   btoi
   app_global_put
-  byte "ASA_BAL"
+  byte "A_IDX"
+  txna ApplicationArgs 1
+  btoi
+  app_global_put
+  byte "B"
   int 0
   app_global_put
-  byte "ALGOS_BAL"
+  byte "A"
   int 0
   app_global_put
-  byte "LIQ_TOKENS"
+  byte "LIQ"
   int 0
   app_global_put
-  byte "CREATOR_ADDR"
+  byte "CRT"
   txn Sender
   app_global_put
   int 1
@@ -70,11 +74,11 @@ tealCode: |
   b l10
   l1:
   int 0
-  byte "USR_ASA"
+  byte "USR_B"
   int 0
   app_local_put
   int 0
-  byte "USR_ALGOS"
+  byte "USR_A"
   int 0
   app_local_put
   int 0
@@ -90,12 +94,12 @@ tealCode: |
   b l10
   l3:
   int 0
-  byte "USR_ASA"
+  byte "USR_B"
   app_local_get
   int 0
   ==
   int 0
-  byte "USR_ALGOS"
+  byte "USR_A"
   app_local_get
   int 0
   ==
@@ -112,10 +116,10 @@ tealCode: |
   b l10
   l4:
   txn Sender
-  byte "CREATOR_ADDR"
+  byte "CRT"
   app_global_get
   ==
-  byte "ESCROW_ADDR"
+  byte "ESC"
   app_global_get
   int 0
   ==
@@ -123,7 +127,7 @@ tealCode: |
   bnz l12
   err
   l12:
-  byte "ESCROW_ADDR"
+  byte "ESC"
   txna Accounts 1
   app_global_put
   int 1
@@ -138,71 +142,76 @@ tealCode: |
   ==
   &&
   gtxn 1 AssetReceiver
-  byte "ESCROW_ADDR"
+  byte "ESC"
   app_global_get
   ==
   &&
   gtxn 1 XferAsset
-  byte "ASSET_IDX"
+  byte "B_IDX"
   app_global_get
   ==
   &&
   gtxn 2 TypeEnum
-  int pay
+  int axfer
   ==
-  &&
-  gtxn 2 Receiver
-  byte "ESCROW_ADDR"
+  gtxn 2 XferAsset
+  byte "A_IDX"
   app_global_get
   ==
+  &&
+  gtxn 2 AssetReceiver
+  byte "ESC"
+  app_global_get
+  ==
+  &&
   &&
   bnz l13
   err
   l13:
-  byte "ASA_BAL"
+  byte "B"
   app_global_get
   int 0
   !=
-  byte "ALGOS_BAL"
+  byte "A"
   app_global_get
   int 0
   !=
   &&
   bz l14
-  byte "ALGOS_BAL"
+  byte "A"
   app_global_get
   int 1000000
   *
-  byte "ASA_BAL"
+  byte "B"
   app_global_get
   /
-  gtxn 2 Amount
+  gtxn 2 AssetAmount
   int 1000000
   *
   gtxn 1 AssetAmount
   /
   >=
   bnz l15
-  gtxn 2 Amount
+  gtxn 2 AssetAmount
   int 1000000
   *
   gtxn 1 AssetAmount
   /
-  byte "ALGOS_BAL"
+  byte "A"
   app_global_get
   int 1000000
   *
-  byte "ASA_BAL"
+  byte "B"
   app_global_get
   /
   -
   int 1000000
   *
-  byte "ALGOS_BAL"
+  byte "A"
   app_global_get
   int 1000000
   *
-  byte "ASA_BAL"
+  byte "B"
   app_global_get
   /
   /
@@ -213,14 +222,14 @@ tealCode: |
   l17:
   b l18
   l15:
-  byte "ALGOS_BAL"
+  byte "A"
   app_global_get
   int 1000000
   *
-  byte "ASA_BAL"
+  byte "B"
   app_global_get
   /
-  gtxn 2 Amount
+  gtxn 2 AssetAmount
   int 1000000
   *
   gtxn 1 AssetAmount
@@ -228,11 +237,11 @@ tealCode: |
   -
   int 1000000
   *
-  byte "ALGOS_BAL"
+  byte "A"
   app_global_get
   int 1000000
   *
-  byte "ASA_BAL"
+  byte "B"
   app_global_get
   /
   /
@@ -243,7 +252,7 @@ tealCode: |
   l16:
   l18:
   l14:
-  byte "LIQ_TOKENS"
+  byte "LIQ"
   app_global_get
   int 0
   ==
@@ -253,23 +262,23 @@ tealCode: |
   int 0
   byte "USR_LIQ"
   app_local_get
-  gtxn 2 Amount
-  byte "LIQ_TOKENS"
+  gtxn 2 AssetAmount
+  byte "LIQ"
   app_global_get
   *
-  byte "ALGOS_BAL"
+  byte "A"
   app_global_get
   /
   +
   app_local_put
-  byte "LIQ_TOKENS"
-  byte "LIQ_TOKENS"
+  byte "LIQ"
+  byte "LIQ"
   app_global_get
-  gtxn 2 Amount
-  byte "LIQ_TOKENS"
+  gtxn 2 AssetAmount
+  byte "LIQ"
   app_global_get
   *
-  byte "ALGOS_BAL"
+  byte "A"
   app_global_get
   /
   +
@@ -278,22 +287,22 @@ tealCode: |
   l19:
   int 0
   byte "USR_LIQ"
-  gtxn 2 Amount
+  gtxn 2 AssetAmount
   app_local_put
-  byte "LIQ_TOKENS"
-  gtxn 2 Amount
+  byte "LIQ"
+  gtxn 2 AssetAmount
   app_global_put
   l20:
-  byte "ASA_BAL"
-  byte "ASA_BAL"
+  byte "B"
+  byte "B"
   app_global_get
   gtxn 1 AssetAmount
   +
   app_global_put
-  byte "ALGOS_BAL"
-  byte "ALGOS_BAL"
+  byte "A"
+  byte "A"
   app_global_get
-  gtxn 2 Amount
+  gtxn 2 AssetAmount
   +
   app_global_put
   int 1
@@ -311,13 +320,13 @@ tealCode: |
   >=
   &&
   int 0
-  byte "USR_ALGOS"
+  byte "USR_A"
   app_local_get
   int 0
   ==
   &&
   int 0
-  byte "USR_ASA"
+  byte "USR_B"
   app_local_get
   int 0
   ==
@@ -326,28 +335,24 @@ tealCode: |
   err
   l21:
   int 0
-  byte "USR_ALGOS"
-  byte "ALGOS_BAL"
+  byte "USR_A"
+  byte "A"
   app_global_get
   txna ApplicationArgs 1
   btoi
   *
-  byte "LIQ_TOKENS"
+  byte "LIQ"
   app_global_get
   /
-  global MinTxnFee
-  -
-  global MinTxnFee
-  -
   app_local_put
   int 0
-  byte "USR_ASA"
-  byte "ASA_BAL"
+  byte "USR_B"
+  byte "B"
   app_global_get
   txna ApplicationArgs 1
   btoi
   *
-  byte "LIQ_TOKENS"
+  byte "LIQ"
   app_global_get
   /
   app_local_put
@@ -360,30 +365,26 @@ tealCode: |
   btoi
   -
   app_local_put
-  byte "LIQ_TOKENS"
-  byte "LIQ_TOKENS"
+  byte "LIQ"
+  byte "LIQ"
   app_global_get
   txna ApplicationArgs 1
   btoi
   -
   app_global_put
-  byte "ALGOS_BAL"
-  byte "ALGOS_BAL"
+  byte "A"
+  byte "A"
   app_global_get
   int 0
-  byte "USR_ALGOS"
+  byte "USR_A"
   app_local_get
   -
-  global MinTxnFee
-  -
-  global MinTxnFee
-  -
   app_global_put
-  byte "ASA_BAL"
-  byte "ASA_BAL"
+  byte "B"
+  byte "B"
   app_global_get
   int 0
-  byte "USR_ASA"
+  byte "USR_B"
   app_local_get
   -
   app_global_put
@@ -399,13 +400,13 @@ tealCode: |
   ==
   &&
   int 0
-  byte "USR_ALGOS"
+  byte "USR_A"
   app_local_get
   int 0
   ==
   &&
   int 0
-  byte "USR_ASA"
+  byte "USR_B"
   app_local_get
   int 0
   ==
@@ -416,38 +417,48 @@ tealCode: |
   gtxn 1 TypeEnum
   int axfer
   ==
+  gtxn 1 XferAsset
+  byte "B_IDX"
+  app_global_get
+  ==
+  &&
   bnz l23
   gtxn 1 TypeEnum
-  int pay
+  int axfer
   ==
+  gtxn 1 XferAsset
+  byte "A_IDX"
+  app_global_get
+  ==
+  &&
+  gtxn 1 AssetReceiver
+  byte "ESC"
+  app_global_get
+  ==
+  &&
   bnz l24
   err
   l23:
   gtxn 1 AssetReceiver
-  byte "ESCROW_ADDR"
+  byte "ESC"
   app_global_get
   ==
-  gtxn 1 XferAsset
-  byte "ASSET_IDX"
-  app_global_get
-  ==
-  &&
   bnz l26
   err
   l26:
-  byte "ASA_BAL"
-  byte "ASA_BAL"
+  byte "B"
+  byte "B"
   app_global_get
   gtxn 1 AssetAmount
   +
   app_global_put
   int 0
-  byte "USR_ALGOS"
-  byte "ALGOS_BAL"
+  byte "USR_A"
+  byte "A"
   app_global_get
   int 1000000
   *
-  byte "ASA_BAL"
+  byte "B"
   app_global_get
   /
   gtxn 1 AssetAmount
@@ -459,52 +470,45 @@ tealCode: |
   int 100
   /
   app_local_put
-  byte "ALGOS_BAL"
-  byte "ALGOS_BAL"
+  byte "A"
+  byte "A"
   app_global_get
   int 0
-  byte "USR_ALGOS"
+  byte "USR_A"
   app_local_get
   -
   app_global_put
   b l25
   l24:
-  gtxn 1 Receiver
-  byte "ESCROW_ADDR"
+  byte "A"
+  byte "A"
   app_global_get
-  ==
-  bnz l27
-  err
-  l27:
-  byte "ALGOS_BAL"
-  byte "ALGOS_BAL"
-  app_global_get
-  gtxn 1 Amount
+  gtxn 1 AssetAmount
   +
   app_global_put
   int 0
-  byte "USR_ASA"
-  gtxn 1 Amount
+  byte "USR_B"
+  gtxn 1 AssetAmount
   int 97
   *
   int 1000000
   *
   int 100
   /
-  byte "ALGOS_BAL"
+  byte "A"
   app_global_get
   int 1000000
   *
-  byte "ASA_BAL"
+  byte "B"
   app_global_get
   /
   /
   app_local_put
-  byte "ASA_BAL"
-  byte "ASA_BAL"
+  byte "B"
+  byte "B"
   app_global_get
   int 0
-  byte "USR_ASA"
+  byte "USR_B"
   app_local_get
   -
   app_global_put
@@ -514,44 +518,67 @@ tealCode: |
   b l10
   l8:
   global GroupSize
-  int 3
+  int 4
   ==
   gtxn 1 AssetAmount
   int 0
-  byte "USR_ASA"
+  byte "USR_B"
   app_local_get
   ==
   &&
   gtxn 1 Sender
-  byte "ESCROW_ADDR"
+  byte "ESC"
   app_global_get
   ==
   &&
   gtxn 1 XferAsset
-  byte "ASSET_IDX"
+  byte "B_IDX"
   app_global_get
   ==
   &&
-  gtxn 2 Amount
-  int 0
-  byte "USR_ALGOS"
-  app_local_get
+  gtxn 2 TypeEnum
+  int axfer
+  ==
+  gtxn 2 XferAsset
+  byte "A_IDX"
+  app_global_get
   ==
   &&
   gtxn 2 Sender
-  byte "ESCROW_ADDR"
+  byte "ESC"
   app_global_get
   ==
   &&
-  bnz l28
-  err
-  l28:
+  &&
+  gtxn 2 AssetAmount
   int 0
-  byte "USR_ASA"
+  byte "USR_A"
+  app_local_get
+  ==
+  &&
+  gtxn 3 Sender
+  gtxn 0 Sender
+  ==
+  &&
+  gtxn 3 TypeEnum
+  int pay
+  ==
+  &&
+  gtxn 3 Amount
+  global MinTxnFee
+  global MinTxnFee
+  +
+  >=
+  &&
+  bnz l27
+  err
+  l27:
+  int 0
+  byte "USR_B"
   int 0
   app_local_put
   int 0
-  byte "USR_ALGOS"
+  byte "USR_A"
   int 0
   app_local_put
   int 1
@@ -559,17 +586,17 @@ tealCode: |
   b l10
   l9:
   gtxn 0 Sender
-  byte "CREATOR_ADDR"
+  byte "CRT"
   app_global_get
   ==
-  byte "ESCROW_ADDR"
+  byte "ESC"
   app_global_get
   int 0
   ==
   &&
-  bnz l29
+  bnz l28
   err
-  l29:
+  l28:
   int 1
   return
   l10:
@@ -592,7 +619,7 @@ base64ToBytes:
   - 97
   - 100
   - 38
-  - 15
+  - 16
   - 6
   - 85
   - 80
@@ -658,76 +685,42 @@ base64ToBytes:
   - 82
   - 79
   - 87
-  - 9
-  - 65
-  - 83
-  - 83
-  - 69
-  - 84
+  - 5
+  - 66
   - 95
   - 73
   - 68
   - 88
-  - 7
-  - 65
-  - 83
+  - 5
   - 65
   - 95
+  - 73
+  - 68
+  - 88
+  - 1
   - 66
+  - 1
   - 65
-  - 76
-  - 9
-  - 65
-  - 76
-  - 71
-  - 79
-  - 83
-  - 95
-  - 66
-  - 65
-  - 76
-  - 10
+  - 3
   - 76
   - 73
   - 81
-  - 95
-  - 84
-  - 79
-  - 75
-  - 69
-  - 78
-  - 83
-  - 12
+  - 3
   - 67
   - 82
-  - 69
-  - 65
   - 84
-  - 79
+  - 5
+  - 85
+  - 83
   - 82
   - 95
-  - 65
-  - 68
-  - 68
-  - 82
-  - 7
+  - 66
+  - 5
   - 85
   - 83
   - 82
   - 95
   - 65
-  - 83
-  - 65
-  - 9
-  - 85
-  - 83
-  - 82
-  - 95
-  - 65
-  - 76
-  - 71
-  - 79
-  - 83
   - 7
   - 85
   - 83
@@ -736,18 +729,10 @@ base64ToBytes:
   - 76
   - 73
   - 81
-  - 11
+  - 3
   - 69
   - 83
   - 67
-  - 82
-  - 79
-  - 87
-  - 95
-  - 65
-  - 68
-  - 68
-  - 82
   - 49
   - 24
   - 34
@@ -761,7 +746,7 @@ base64ToBytes:
   - 18
   - 64
   - 0
-  - 97
+  - 104
   - 49
   - 25
   - 36
@@ -770,7 +755,7 @@ base64ToBytes:
   - 18
   - 64
   - 0
-  - 108
+  - 115
   - 49
   - 25
   - 33
@@ -778,7 +763,7 @@ base64ToBytes:
   - 18
   - 64
   - 0
-  - 105
+  - 112
   - 54
   - 26
   - 0
@@ -786,7 +771,7 @@ base64ToBytes:
   - 18
   - 64
   - 0
-  - 124
+  - 131
   - 54
   - 26
   - 0
@@ -794,7 +779,7 @@ base64ToBytes:
   - 18
   - 64
   - 0
-  - 143
+  - 150
   - 54
   - 26
   - 0
@@ -802,15 +787,15 @@ base64ToBytes:
   - 18
   - 64
   - 1
-  - 136
+  - 151
   - 54
   - 26
   - 0
   - 43
   - 18
   - 64
-  - 1
-  - 255
+  - 2
+  - 2
   - 54
   - 26
   - 0
@@ -819,7 +804,7 @@ base64ToBytes:
   - 18
   - 64
   - 2
-  - 171
+  - 179
   - 54
   - 26
   - 0
@@ -827,8 +812,8 @@ base64ToBytes:
   - 5
   - 18
   - 64
-  - 2
-  - 228
+  - 3
+  - 17
   - 0
   - 39
   - 6
@@ -839,7 +824,10 @@ base64ToBytes:
   - 103
   - 39
   - 7
-  - 34
+  - 54
+  - 26
+  - 1
+  - 23
   - 103
   - 39
   - 8
@@ -851,6 +839,10 @@ base64ToBytes:
   - 103
   - 39
   - 10
+  - 34
+  - 103
+  - 39
+  - 11
   - 49
   - 0
   - 103
@@ -858,12 +850,7 @@ base64ToBytes:
   - 67
   - 66
   - 2
-  - 217
-  - 34
-  - 39
-  - 11
-  - 34
-  - 102
+  - 255
   - 34
   - 39
   - 12
@@ -872,31 +859,29 @@ base64ToBytes:
   - 34
   - 39
   - 13
+  - 34
+  - 102
+  - 34
+  - 39
+  - 14
   - 34
   - 102
   - 35
   - 67
   - 66
   - 2
-  - 197
+  - 235
   - 34
   - 67
   - 66
   - 2
-  - 192
-  - 34
-  - 39
-  - 11
-  - 98
-  - 34
-  - 18
+  - 230
   - 34
   - 39
   - 12
   - 98
   - 34
   - 18
-  - 16
   - 34
   - 39
   - 13
@@ -904,21 +889,28 @@ base64ToBytes:
   - 34
   - 18
   - 16
+  - 34
+  - 39
+  - 14
+  - 98
+  - 34
+  - 18
+  - 16
   - 64
   - 0
   - 1
   - 0
   - 66
   - 2
-  - 165
+  - 203
   - 49
   - 0
   - 39
-  - 10
+  - 11
   - 100
   - 18
   - 39
-  - 14
+  - 15
   - 100
   - 34
   - 18
@@ -928,7 +920,7 @@ base64ToBytes:
   - 1
   - 0
   - 39
-  - 14
+  - 15
   - 54
   - 28
   - 1
@@ -937,7 +929,7 @@ base64ToBytes:
   - 67
   - 66
   - 2
-  - 138
+  - 176
   - 50
   - 4
   - 33
@@ -953,7 +945,7 @@ base64ToBytes:
   - 1
   - 20
   - 39
-  - 14
+  - 15
   - 100
   - 18
   - 16
@@ -968,28 +960,36 @@ base64ToBytes:
   - 51
   - 2
   - 16
-  - 35
+  - 36
+  - 18
+  - 51
+  - 2
+  - 17
+  - 39
+  - 7
+  - 100
   - 18
   - 16
   - 51
   - 2
-  - 7
+  - 20
   - 39
-  - 14
+  - 15
   - 100
   - 18
+  - 16
   - 16
   - 64
   - 0
   - 1
   - 0
   - 39
-  - 7
+  - 8
   - 100
   - 34
   - 19
   - 39
-  - 8
+  - 9
   - 100
   - 34
   - 19
@@ -998,18 +998,18 @@ base64ToBytes:
   - 0
   - 111
   - 39
-  - 8
+  - 9
   - 100
   - 33
   - 6
   - 11
   - 39
-  - 7
+  - 8
   - 100
   - 10
   - 51
   - 2
-  - 8
+  - 18
   - 33
   - 6
   - 11
@@ -1023,7 +1023,7 @@ base64ToBytes:
   - 45
   - 51
   - 2
-  - 8
+  - 18
   - 33
   - 6
   - 11
@@ -1032,13 +1032,13 @@ base64ToBytes:
   - 18
   - 10
   - 39
-  - 8
+  - 9
   - 100
   - 33
   - 6
   - 11
   - 39
-  - 7
+  - 8
   - 100
   - 10
   - 9
@@ -1046,13 +1046,13 @@ base64ToBytes:
   - 6
   - 11
   - 39
-  - 8
+  - 9
   - 100
   - 33
   - 6
   - 11
   - 39
-  - 7
+  - 8
   - 100
   - 10
   - 10
@@ -1067,18 +1067,18 @@ base64ToBytes:
   - 0
   - 42
   - 39
-  - 8
+  - 9
   - 100
   - 33
   - 6
   - 11
   - 39
-  - 7
+  - 8
   - 100
   - 10
   - 51
   - 2
-  - 8
+  - 18
   - 33
   - 6
   - 11
@@ -1091,13 +1091,13 @@ base64ToBytes:
   - 6
   - 11
   - 39
-  - 8
+  - 9
   - 100
   - 33
   - 6
   - 11
   - 39
-  - 7
+  - 8
   - 100
   - 10
   - 10
@@ -1109,7 +1109,7 @@ base64ToBytes:
   - 1
   - 0
   - 39
-  - 9
+  - 10
   - 100
   - 34
   - 18
@@ -1118,38 +1118,38 @@ base64ToBytes:
   - 41
   - 34
   - 39
-  - 13
+  - 14
   - 34
   - 39
-  - 13
+  - 14
   - 98
   - 51
   - 2
-  - 8
+  - 18
   - 39
-  - 9
+  - 10
   - 100
   - 11
   - 39
-  - 8
+  - 9
   - 100
   - 10
   - 8
   - 102
   - 39
-  - 9
+  - 10
   - 39
-  - 9
+  - 10
   - 100
   - 51
   - 2
-  - 8
+  - 18
   - 39
-  - 9
+  - 10
   - 100
   - 11
   - 39
-  - 8
+  - 9
   - 100
   - 10
   - 8
@@ -1159,21 +1159,21 @@ base64ToBytes:
   - 13
   - 34
   - 39
-  - 13
+  - 14
   - 51
   - 2
-  - 8
+  - 18
   - 102
   - 39
-  - 9
+  - 10
   - 51
   - 2
-  - 8
+  - 18
   - 103
   - 39
-  - 7
+  - 8
   - 39
-  - 7
+  - 8
   - 100
   - 51
   - 1
@@ -1181,27 +1181,27 @@ base64ToBytes:
   - 8
   - 103
   - 39
-  - 8
+  - 9
   - 39
-  - 8
+  - 9
   - 100
   - 51
   - 2
-  - 8
+  - 18
   - 8
   - 103
   - 35
   - 67
   - 66
   - 1
-  - 137
+  - 167
   - 50
   - 4
   - 35
   - 18
   - 34
   - 39
-  - 13
+  - 14
   - 98
   - 54
   - 26
@@ -1211,14 +1211,14 @@ base64ToBytes:
   - 16
   - 34
   - 39
-  - 12
+  - 13
   - 98
   - 34
   - 18
   - 16
   - 34
   - 39
-  - 11
+  - 12
   - 98
   - 34
   - 18
@@ -1229,6 +1229,22 @@ base64ToBytes:
   - 0
   - 34
   - 39
+  - 13
+  - 39
+  - 9
+  - 100
+  - 54
+  - 26
+  - 1
+  - 23
+  - 11
+  - 39
+  - 10
+  - 100
+  - 10
+  - 102
+  - 34
+  - 39
   - 12
   - 39
   - 8
@@ -1239,38 +1255,16 @@ base64ToBytes:
   - 23
   - 11
   - 39
-  - 9
-  - 100
   - 10
-  - 50
-  - 0
-  - 9
-  - 50
-  - 0
-  - 9
-  - 102
-  - 34
-  - 39
-  - 11
-  - 39
-  - 7
-  - 100
-  - 54
-  - 26
-  - 1
-  - 23
-  - 11
-  - 39
-  - 9
   - 100
   - 10
   - 102
   - 34
   - 39
-  - 13
+  - 14
   - 34
   - 39
-  - 13
+  - 14
   - 98
   - 54
   - 26
@@ -1279,14 +1273,25 @@ base64ToBytes:
   - 9
   - 102
   - 39
-  - 9
+  - 10
   - 39
-  - 9
+  - 10
   - 100
   - 54
   - 26
   - 1
   - 23
+  - 9
+  - 103
+  - 39
+  - 9
+  - 39
+  - 9
+  - 100
+  - 34
+  - 39
+  - 13
+  - 98
   - 9
   - 103
   - 39
@@ -1297,23 +1302,6 @@ base64ToBytes:
   - 34
   - 39
   - 12
-  - 98
-  - 9
-  - 50
-  - 0
-  - 9
-  - 50
-  - 0
-  - 9
-  - 103
-  - 39
-  - 7
-  - 39
-  - 7
-  - 100
-  - 34
-  - 39
-  - 11
   - 98
   - 9
   - 103
@@ -1321,7 +1309,7 @@ base64ToBytes:
   - 67
   - 66
   - 1
-  - 10
+  - 52
   - 50
   - 4
   - 33
@@ -1336,14 +1324,14 @@ base64ToBytes:
   - 16
   - 34
   - 39
-  - 12
+  - 13
   - 98
   - 34
   - 18
   - 16
   - 34
   - 39
-  - 11
+  - 12
   - 98
   - 34
   - 18
@@ -1357,25 +1345,6 @@ base64ToBytes:
   - 16
   - 36
   - 18
-  - 64
-  - 0
-  - 9
-  - 51
-  - 1
-  - 16
-  - 35
-  - 18
-  - 64
-  - 0
-  - 71
-  - 0
-  - 51
-  - 1
-  - 20
-  - 39
-  - 14
-  - 100
-  - 18
   - 51
   - 1
   - 17
@@ -1386,64 +1355,37 @@ base64ToBytes:
   - 16
   - 64
   - 0
-  - 1
-  - 0
-  - 39
-  - 7
-  - 39
-  - 7
-  - 100
+  - 25
   - 51
   - 1
+  - 16
+  - 36
   - 18
-  - 8
-  - 103
-  - 34
-  - 39
-  - 12
-  - 39
-  - 8
-  - 100
-  - 33
-  - 6
-  - 11
+  - 51
+  - 1
+  - 17
   - 39
   - 7
   - 100
-  - 10
-  - 51
-  - 1
   - 18
-  - 11
-  - 33
-  - 9
-  - 11
-  - 33
-  - 6
-  - 10
-  - 33
-  - 10
-  - 10
-  - 102
-  - 39
-  - 8
-  - 39
-  - 8
-  - 100
-  - 34
-  - 39
-  - 12
-  - 98
-  - 9
-  - 103
-  - 66
-  - 0
-  - 59
+  - 16
   - 51
   - 1
-  - 7
+  - 20
   - 39
-  - 14
+  - 15
+  - 100
+  - 18
+  - 16
+  - 64
+  - 0
+  - 63
+  - 0
+  - 51
+  - 1
+  - 20
+  - 39
+  - 15
   - 100
   - 18
   - 64
@@ -1457,15 +1399,66 @@ base64ToBytes:
   - 100
   - 51
   - 1
-  - 8
+  - 18
   - 8
   - 103
   - 34
   - 39
+  - 13
+  - 39
+  - 9
+  - 100
+  - 33
+  - 6
   - 11
+  - 39
+  - 8
+  - 100
+  - 10
   - 51
   - 1
+  - 18
+  - 11
+  - 33
+  - 9
+  - 11
+  - 33
+  - 6
+  - 10
+  - 33
+  - 10
+  - 10
+  - 102
+  - 39
+  - 9
+  - 39
+  - 9
+  - 100
+  - 34
+  - 39
+  - 13
+  - 98
+  - 9
+  - 103
+  - 66
+  - 0
+  - 48
+  - 39
+  - 9
+  - 39
+  - 9
+  - 100
+  - 51
+  - 1
+  - 18
   - 8
+  - 103
+  - 34
+  - 39
+  - 12
+  - 51
+  - 1
+  - 18
   - 33
   - 9
   - 11
@@ -1476,25 +1469,25 @@ base64ToBytes:
   - 10
   - 10
   - 39
-  - 8
+  - 9
   - 100
   - 33
   - 6
   - 11
   - 39
-  - 7
+  - 8
   - 100
   - 10
   - 10
   - 102
   - 39
-  - 7
+  - 8
   - 39
-  - 7
+  - 8
   - 100
   - 34
   - 39
-  - 11
+  - 12
   - 98
   - 9
   - 103
@@ -1502,18 +1495,17 @@ base64ToBytes:
   - 67
   - 66
   - 0
-  - 85
+  - 122
   - 50
   - 4
-  - 33
-  - 5
+  - 36
   - 18
   - 51
   - 1
   - 18
   - 34
   - 39
-  - 11
+  - 12
   - 98
   - 18
   - 16
@@ -1521,7 +1513,7 @@ base64ToBytes:
   - 1
   - 0
   - 39
-  - 14
+  - 15
   - 100
   - 18
   - 16
@@ -1535,20 +1527,58 @@ base64ToBytes:
   - 16
   - 51
   - 2
-  - 8
-  - 34
+  - 16
+  - 36
+  - 18
+  - 51
+  - 2
+  - 17
   - 39
-  - 12
-  - 98
+  - 7
+  - 100
   - 18
   - 16
   - 51
   - 2
   - 0
   - 39
-  - 14
+  - 15
   - 100
   - 18
+  - 16
+  - 16
+  - 51
+  - 2
+  - 18
+  - 34
+  - 39
+  - 13
+  - 98
+  - 18
+  - 16
+  - 51
+  - 3
+  - 0
+  - 51
+  - 0
+  - 0
+  - 18
+  - 16
+  - 51
+  - 3
+  - 16
+  - 35
+  - 18
+  - 16
+  - 51
+  - 3
+  - 8
+  - 50
+  - 0
+  - 50
+  - 0
+  - 8
+  - 15
   - 16
   - 64
   - 0
@@ -1556,12 +1586,12 @@ base64ToBytes:
   - 0
   - 34
   - 39
-  - 11
+  - 12
   - 34
   - 102
   - 34
   - 39
-  - 12
+  - 13
   - 34
   - 102
   - 35
@@ -1573,11 +1603,11 @@ base64ToBytes:
   - 0
   - 0
   - 39
-  - 10
+  - 11
   - 100
   - 18
   - 39
-  - 14
+  - 15
   - 100
   - 34
   - 18
