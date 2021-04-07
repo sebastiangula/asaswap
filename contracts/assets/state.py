@@ -5,6 +5,7 @@ from pyteal import *
 
 from helpers.state import GlobalState, LocalState
 from helpers.parse import parse_args
+from helpers.calc import mulw_divw
 
 
 class ExchangeType:
@@ -40,7 +41,7 @@ class AlgosToAsaContract:
         return self.exchange_rate.store(
             self.a_balance.get() * Int(self.ratio_decimal_points) / self.b_balance.get()
         )
-
+        
     def get_exchange_rate(self, inline=False) -> Expr:
         if inline:
             return (
@@ -73,15 +74,15 @@ class AlgosToAsaContract:
         return self.liquidity_calc.load(TealType.uint64)
 
     def setup_calculations(self):
-        self.a_calc = (
-            self.a_balance.get()
-            * Btoi(Txn.application_args[1])
-            / self.total_liquidity_tokens.get()
+        self.a_calc = mulw_divw(
+            self.a_balance.get(),
+            Btoi(Txn.application_args[1]),
+            self.total_liquidity_tokens.get()
         )
-        self.b_calc = (
-            self.b_balance.get()
-            * Btoi(Txn.application_args[1])
-            / self.total_liquidity_tokens.get()
+        self.b_calc = mulw_divw(
+            self.b_balance.get(),
+            Btoi(Txn.application_args[1]),
+            self.total_liquidity_tokens.get()
         )
 
     def get_contract(self):
@@ -358,15 +359,14 @@ class AlgosToAsaContract:
                                     )
                                 ),
                                 self.b_to_withdraw.put(
-                                    (
+                                    mulw_divw (
                                         self.get_incoming_amount_for_primary_asset(
                                             Gtxn[1]
                                         )
-                                        * Int(100 - self.fee_pct)
+                                        * Int(100 - self.fee_pct),
+                                        Int(self.ratio_decimal_points),
+                                        Int(100) * self.get_exchange_rate(inline=True)
                                     )
-                                    * Int(self.ratio_decimal_points)
-                                    / Int(100)
-                                    / self.get_exchange_rate(inline=True)
                                 ),
                                 self.b_balance.put(
                                     self.b_balance.get() - self.b_to_withdraw.get()

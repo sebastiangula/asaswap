@@ -9,7 +9,7 @@ import { USR_A_BAL, USR_B_BAL } from '../common/constants.js';
 
 const { assert } = chai;
 
-const MAX_INT = Math.floor(2**52);
+const MAX_INT = Math.floor(2**42);
 
 [ASA_TO_ASA, ALGOS_TO_ASA].forEach(function (contractType) {
   describe(`${contractType} Precision Tests`, function () {

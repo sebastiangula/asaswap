@@ -102,6 +102,7 @@ class AlgosAsaManager {
     this.secondaryAssetId = assets['secondaryAssetId'];
     this.liquidityAssetId = assets['liquidityAssetId'];
     this.program = program;
+    console.log(program.split('\n').length)       
 
     this.creationArgs = [
       `int:${this.secondaryAssetId}`,
